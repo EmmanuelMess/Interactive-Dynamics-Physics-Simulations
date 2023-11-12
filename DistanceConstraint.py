@@ -30,7 +30,6 @@ class DistanceConstraint(Constraint):
     def dCdq(self, x):
         return x
 
-
     def J(self) -> dict:
         return {
             self.particles[0].i: self.particles[0].x - self.particles[1].x,

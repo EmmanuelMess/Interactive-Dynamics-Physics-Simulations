@@ -20,6 +20,11 @@ class UI:
         pygame.init()
         self.screen = pygame.display.set_mode(self.size)
 
+    def showTime(self, screen):
+        myfont = pygame.font.SysFont("monospace", 11)
+        label = myfont.render(f"{self.simulation.getRunningTime()}s", 1, (0, 0, 0))
+        screen.blit(label, (0,0))
+
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -43,9 +48,10 @@ class UI:
                 pygame.draw.line(self.screen, (0, 255, 0), p, aApplied)
                 pygame.draw.line(self.screen, (255, 0, 0), p, aConstraint)
                 pygame.draw.circle(self.screen, (0, 0, 255), p, 5)
+            self.showTime(self.screen)
             pygame.display.flip()
 
-            time.sleep(self.timestep*10)
+            time.sleep(float(self.timestep))
 
         pygame.quit()
 

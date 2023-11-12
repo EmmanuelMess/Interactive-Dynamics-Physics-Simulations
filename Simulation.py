@@ -56,6 +56,9 @@ class Simulation:
 
         self.t += self.timestep
 
+    def getRunningTime(self):
+        return self.t
+
     @staticmethod
     def matrices(particles: List[Particle], constraints: List[Constraint]):
         d = 2

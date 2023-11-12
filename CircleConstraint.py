@@ -1,10 +1,13 @@
-from typing import List
+import jax.numpy as jnp
+from jax import jacfwd, grad
 
 import numpy as np
 import pygame
 
+import PositionApproximation
 from Constraint import Constraint
 from Particle import Particle
+from PositionApproximation import constructPositionFunction
 
 
 class CircleConstraint(Constraint):
@@ -14,18 +17,33 @@ class CircleConstraint(Constraint):
         super().__init__(i, [particle])
         self.center, self.radius = center, radius
 
+    @staticmethod
+    def constraint(radius: jnp.float64, center: jnp.ndarray):
+        def f(x):
+            return jnp.sum((x - center) ** 2) / 2 - (radius ** 2) / 2
+
+        return f
+
     def C(self) -> np.float64:
-        r = self.radius
         p = self.particles[0]
-        return (np.sum((p.x - self.center)**2))/2 - (r**2)/2
+        positionApproximation = constructPositionFunction(jnp.array(p.x), jnp.array(p.v), jnp.array(p.a))
+        constraintFunction = lambda t: CircleConstraint.constraint(self.radius, jnp.array(self.center))(positionApproximation(t))
+        c = constraintFunction(jnp.float64(0))
+        return np.float64(c)
 
     def dC(self) -> np.float64:
         p = self.particles[0]
-        return np.sum((p.x - self.center) * p.v)
+        positionApproximation = constructPositionFunction(jnp.array(p.x), jnp.array(p.v), jnp.array(p.a))
+        constraintFunction = lambda t: CircleConstraint.constraint(self.radius, jnp.array(self.center))(positionApproximation(t))
+        c = grad(constraintFunction)(jnp.float64(0))
+        return np.float64(c)
 
     def d2C(self) -> np.float64:
         p = self.particles[0]
-        return np.sum(p.v ** 2) + np.sum((p.x - self.center) * p.a)
+        positionApproximation = constructPositionFunction(jnp.array(p.x), jnp.array(p.v), jnp.array(p.a))
+        constraintFunction = lambda t: CircleConstraint.constraint(self.radius, jnp.array(self.center))(positionApproximation(t))
+        c = grad(grad(constraintFunction))(jnp.float64(0))
+        return np.float64(c)
 
     def dCdq(self, x):
         return x - self.center

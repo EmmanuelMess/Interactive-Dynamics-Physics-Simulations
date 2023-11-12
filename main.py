@@ -8,7 +8,6 @@ from CircleConstraint import CircleConstraint
 from Simulation import Simulation
 from UI import UI
 
-
 def case1():
     """
     Circle constrant single particle
@@ -28,7 +27,7 @@ def case1():
     timestep = np.float64(0.001)
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[2, 2]])
+        return np.array([[0, 0]])
 
     return particles, constraints, timestep, force
 
@@ -129,7 +128,7 @@ def case4():
 
 
 def main():
-    particles, constraints, timestep, force = case2()
+    particles, constraints, timestep, force = case1()
     simulation = Simulation(particles, constraints, timestep, force)
     ui = UI(particles, constraints, simulation, timestep)
     ui.run()
