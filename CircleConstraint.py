@@ -1,5 +1,7 @@
+from typing import Any, Callable
+
 import jax.numpy as jnp
-from jax import jacfwd, grad
+from jax import jit, grad
 
 import numpy as np
 import pygame
@@ -13,37 +15,27 @@ from PositionApproximation import constructPositionFunction
 class CircleConstraint(Constraint):
     radius: np.float64
 
-    def __init__(self,  i: int, particle: Particle, center: np.ndarray, radius: np.float64):
-        super().__init__(i, [particle])
+    def __init__(self, index: int, particle: Particle, center: np.ndarray, radius: np.float64):
+        super().__init__(index, [particle], CircleConstraint.constraintTime)
         self.center, self.radius = center, radius
 
     @staticmethod
-    def constraint(radius: jnp.float64, center: jnp.ndarray):
-        def f(x):
-            return jnp.sum((x - center) ** 2) / 2 - (radius ** 2) / 2
+    @jit
+    def constraint(center: jnp.ndarray, radius: jnp.ndarray, x: jnp.ndarray) -> jnp.float64:
+        return jnp.sum((x - center) ** 2) / 2 - (radius ** 2) / 2
 
-        return f
+    @staticmethod
+    @jit
+    def constraintTime(t: jnp.float64, x: jnp.ndarray, params) -> jnp.float64:
+        p = x[0]
+        positionApproximation = constructPositionFunction(p[0], p[1], p[2])
+        return CircleConstraint.constraint(params["center"], params["radius"], positionApproximation(t))
 
-    def C(self) -> np.float64:
-        p = self.particles[0]
-        positionApproximation = constructPositionFunction(jnp.array(p.x), jnp.array(p.v), jnp.array(p.a))
-        constraintFunction = lambda t: CircleConstraint.constraint(self.radius, jnp.array(self.center))(positionApproximation(t))
-        c = constraintFunction(jnp.float64(0))
-        return np.float64(c)
-
-    def dC(self) -> np.float64:
-        p = self.particles[0]
-        positionApproximation = constructPositionFunction(jnp.array(p.x), jnp.array(p.v), jnp.array(p.a))
-        constraintFunction = lambda t: CircleConstraint.constraint(self.radius, jnp.array(self.center))(positionApproximation(t))
-        c = grad(constraintFunction)(jnp.float64(0))
-        return np.float64(c)
-
-    def d2C(self) -> np.float64:
-        p = self.particles[0]
-        positionApproximation = constructPositionFunction(jnp.array(p.x), jnp.array(p.v), jnp.array(p.a))
-        constraintFunction = lambda t: CircleConstraint.constraint(self.radius, jnp.array(self.center))(positionApproximation(t))
-        c = grad(grad(constraintFunction))(jnp.float64(0))
-        return np.float64(c)
+    def getArgs(self) -> dict:
+        return {
+            "center": self.center,
+            "radius": self.radius
+        }
 
     def dCdq(self, x):
         return x - self.center

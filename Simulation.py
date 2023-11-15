@@ -84,12 +84,13 @@ class Simulation:
         Q = Q.reshape((n * d, 1))
 
         for constraint in constraints:
-            C[constraint.i, 0] = constraint.C()
-            dC[constraint.i, 0] = constraint.dC()
+            particlesMatrix = constraint.getParticleMatrix()
+            C[constraint.index, 0] = constraint.C(particlesMatrix)
+            dC[constraint.index, 0] = constraint.dC(particlesMatrix)
             for j, value in constraint.J().items():
-                J[constraint.i, j] = value.copy()
+                J[constraint.index, j] = value.copy()
             for j, value in constraint.dJ().items():
-                dJ[constraint.i, j] = value.copy()
+                dJ[constraint.index, j] = value.copy()
 
         J = J.reshape((m, n * d))
         dJ = dJ.reshape((m, n * d))

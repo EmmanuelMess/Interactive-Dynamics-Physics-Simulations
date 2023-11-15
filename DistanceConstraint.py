@@ -1,31 +1,39 @@
-from typing import List
+import jax.numpy as jnp
+from jax import jit, grad
 
 import numpy as np
 import pygame
 
 from Constraint import Constraint
 from Particle import Particle
+from PositionApproximation import constructPositionFunction
 
 
 class DistanceConstraint(Constraint):
     distance: np.float64
 
-    def __init__(self, i: int, particleA: Particle, particleB: Particle, distance: np.float64):
-        super().__init__(i, [particleA, particleB])
+    def __init__(self, index: int, particleA: Particle, particleB: Particle, distance: np.float64):
+        super().__init__(index, [particleA, particleB], DistanceConstraint.constraintTime)
         self.distance = distance
 
-    def C(self) -> np.float64:
-        d = self.distance
-        a, b = self.particles[0], self.particles[1]
-        return np.sum((a.x-b.x)**2)/2 - np.sum(d**2)/2
+    @staticmethod
+    @jit
+    def constraint(distance, a: jnp.ndarray, b: jnp.ndarray):
+        return jnp.sum((a - b) ** 2) / 2 - (distance ** 2) / 2
 
-    def dC(self) -> np.float64:
-        a, b = self.particles[0], self.particles[1]
-        return np.sum((a.x - b.x) * (a.v - b.v), dtype=np.float64)
+    @staticmethod
+    @jit
+    def constraintTime(t: jnp.float64, x: jnp.ndarray, params):
+        a = x[0]
+        b = x[1]
+        positionApproximationA = constructPositionFunction(a[0], a[1], a[2])
+        positionApproximationB = constructPositionFunction(b[0], b[1], b[2])
+        return DistanceConstraint.constraint(params["distance"], positionApproximationA(t), positionApproximationB(t))
 
-    def d2C(self) -> np.float64:
-        a, b = self.particles[0], self.particles[1]
-        return np.sum((a.v - b.v) ** 2) + np.sum((a.x - b.x) * (a.a - b.a))
+    def getArgs(self) -> dict:
+        return {
+            "distance": self.distance
+        }
 
     def dCdq(self, x):
         return x
