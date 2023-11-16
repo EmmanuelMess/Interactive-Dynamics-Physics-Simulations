@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List, Callable
 
 import jax.numpy as jnp
-from jax import jit, grad
+from jax import jit, grad, jacfwd
 
 import numpy as np
 import pygame
@@ -17,6 +17,7 @@ class Constraint(ABC):
 
     @abstractmethod
     def __init__(self, index: int, particles: List[Particle],
+                 constraint: Callable[[jnp.ndarray, dict], jnp.float64],
                  constraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64]):
         """
 
@@ -28,13 +29,15 @@ class Constraint(ABC):
         self.index, self.particles, self.constraintTime = index, particles, constraintTime
         self.dConstraintTime = grad(self.constraintTime, argnums=0)
         self.d2ConstraintTime = grad(self.dConstraintTime, argnums=0)
+        self.dConstraint = jacfwd(self.constraintTime, argnums=1)
+        self.d2Constraint = jacfwd(self.dConstraintTime, argnums=1)
 
 
     @abstractmethod
     def getArgs(self) -> dict:
         pass
 
-    def getParticleMatrix(self) -> jnp.ndarray:
+    def getFullParticleMatrix(self) -> jnp.ndarray:
         particleMatrix = np.empty((len(self.particles), 3, 2))
 
         for i, particle in enumerate(self.particles):
@@ -44,22 +47,32 @@ class Constraint(ABC):
 
         return jnp.array(particleMatrix)
 
-    def C(self, particleMatrix: jnp.ndarray) -> np.float64:
-        return self.constraintTime(jnp.float64(0), particleMatrix, self.getArgs())
+    def getParticlePositionMatrix(self) -> jnp.ndarray:
+        particleMatrix = np.empty((len(self.particles), 2))
 
-    def dC(self, particleMatrix: jnp.ndarray) -> np.float64:
-        return self.dConstraintTime(jnp.float64(0), particleMatrix, self.getArgs())
+        for i, particle in enumerate(self.particles):
+            particleMatrix[i] = particle.x
 
-    def d2C(self, particleMatrix: jnp.ndarray) -> np.float64:
-        return self.d2ConstraintTime(jnp.float64(0), particleMatrix, self.getArgs())
+        return jnp.array(particleMatrix)
 
-    @abstractmethod
+    def C(self) -> np.float64:
+        return self.constraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+
+    def dC(self) -> np.float64:
+        return self.dConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+
+    def d2C(self) -> np.float64:
+        return self.d2ConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+
     def J(self) -> dict:
-        pass
+        constraintJacobian = self.dConstraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
 
-    @abstractmethod
+        return { particle.i: constraintJacobian[particle.i][0] for particle in self.particles }
+
     def dJ(self) -> dict:
-        pass
+        constraintJacobian = self.d2Constraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
+
+        return {particle.i: constraintJacobian[particle.i][0] for particle in self.particles}
 
     @abstractmethod
     def surface(self, surface: pygame.Surface, origin: np.ndarray):
