@@ -41,5 +41,5 @@ class CircleConstraint(Constraint):
     def surface(self, surface: pygame.Surface, origin: np.ndarray):
         c = (float((self.center+origin)[0]), float((self.center+origin)[1]))
         r = float(self.radius)
-        pygame.draw.circle(surface, (0, 0, 0), c, r)
-        pygame.draw.circle(surface, (255, 255, 255, 0), c, r - 1)
+        rect = pygame.Rect(c[0]-r, c[1]-r, r*2, r*2)
+        pygame.draw.ellipse(surface, (0, 0, 0), rect, width=1)
