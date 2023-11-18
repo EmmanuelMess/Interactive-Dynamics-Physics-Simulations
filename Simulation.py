@@ -9,16 +9,18 @@ from Particle import Particle
 
 class Simulation:
     def __init__(self, particles: List[Particle], constraints: List[Constraint], timestep: np.float64,
-                 force: Callable[[np.float64], np.ndarray]):
-        self.particles, self.constraints, self.timestep, self.force = particles, constraints, timestep, force
+                 force: Callable[[np.float64], np.ndarray], printData: bool = False):
+        self.particles, self.constraints, self.timestep, self.force, self.printData = particles, constraints, timestep, force, printData
         self.t = np.float64(0)
 
     def update(self):
-        print("----------")
-        print("t", self.t)
+        if self.printData:
+            print("----------")
+            print("t", self.t)
 
-        for particle in self.particles:
-            print("i", particle.i, "x", particle.x, "v", particle.v)
+        if self.printData:
+            for particle in self.particles:
+                print("i", particle.i, "x", particle.x, "v", particle.v)
 
         for particle in self.particles:
             particle.aApplied = self.force(self.t)[particle.i]
@@ -26,22 +28,24 @@ class Simulation:
 
         dq, Q, W, J, dJ, C, dC, lagrange = Simulation.matrices(self.particles, self.constraints)
 
-        print("dq", dq)
-        print("Q", Q)
-        print("W", W)
-        print("J", J)
-        print("dJ", dJ)
+        if self.printData:
+            print("dq", dq)
+            print("Q", Q)
+            print("W", W)
+            print("J", J)
+            print("dJ", dJ)
 
-        print("J W J.T", J @ W @ J.T)
-        print("dJ dq", dJ @ dq)
-        print("JWQ", J @ W @ Q)
-        print("C", C)
-        print("dC", dC)
+            print("J W J.T", J @ W @ J.T)
+            print("dJ dq", dJ @ dq)
+            print("JWQ", J @ W @ Q)
+            print("C", C)
+            print("dC", dC)
 
         res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm')
 
-        print("l", res.x)
-        print("f", lagrange(res.x))
+        if self.printData:
+            print("l", res.x)
+            print("f", lagrange(res.x))
 
         aConstraint = (J.T @ res.x).reshape((-1, 2))
 
@@ -49,7 +53,8 @@ class Simulation:
             particle.aConstraint = aConstraint[particle.i].copy()
             particle.a = particle.aApplied + particle.aConstraint
 
-            print("i", particle.i, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
+            if self.printData:
+                print("i", particle.i, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
 
             particle.x = Simulation.x(particle.x, particle.v, particle.a, self.t)
             particle.v = Simulation.dx(particle.x, particle.v, particle.a, self.t)
