@@ -38,7 +38,7 @@ class Simulation:
         print("C", C)
         print("dC", dC)
 
-        res = root(lagrange, x0=np.zeros(len(self.constraints)), method='lm')
+        res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm')
 
         print("l", res.x)
         print("f", lagrange(res.x))
@@ -60,20 +60,20 @@ class Simulation:
         return self.t
 
     @staticmethod
-    def matrices(particles: List[Particle], constraints: List[Constraint]):
+    def matrices(particles: List[Particle], constraints: List[Constraint], weight: np.float64 = 1):
         d = 2
         n = len(particles)
         m = len(constraints)
         ks = 0.1
         kd = 1
 
-        dq = np.zeros((n, d))
-        Q = np.zeros((n, d))
-        C = np.zeros((m, 1))
-        dC = np.zeros((m, 1))
-        W = np.identity(n * d)
-        J = np.zeros((m, n, d))
-        dJ = np.zeros((m, n, d))
+        dq = np.zeros((n, d), dtype=np.float64)
+        Q = np.zeros((n, d), dtype=np.float64)
+        C = np.zeros((m, 1), dtype=np.float64)
+        dC = np.zeros((m, 1), dtype=np.float64)
+        W = np.identity(n * d, dtype=np.float64) * weight
+        J = np.zeros((m, n, d), dtype=np.float64)
+        dJ = np.zeros((m, n, d), dtype=np.float64)
 
         for particle in particles:
             for k in range(d):

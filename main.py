@@ -21,13 +21,13 @@ def case1():
     ]
 
     constraints: List[Constraint] = [
-        CircleConstraint(0, particles[0], np.array([50, 20]), np.float64(100))
+        CircleConstraint(0, particles[0], np.array([50, 20], dtype=np.float64), np.float64(100))
     ]
 
     timestep = np.float64(0.001)
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0]])
+        return np.array([[0, 0]], dtype=np.float64)
 
     return particles, constraints, timestep, force
 
@@ -56,7 +56,7 @@ def case2():
     timestep = np.float64(0.001)
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0], [0, 0]])
+        return np.array([[0, 0], [0, 0]], dtype=np.float64)
 
     return particles, constraints, timestep, force
 
@@ -86,7 +86,7 @@ def case3():
     timestep = (np.float64(0.001))
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0], [0, 0]])
+        return np.array([[0, 0], [0, 0]], dtype=np.float64)
 
     return particles, constraints, timestep, force
 
@@ -122,7 +122,7 @@ def case4():
     timestep = (np.float64(0.0001))
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0] for i in range(len(particles))])
+        return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
     return particles, constraints, timestep, force
 
@@ -159,7 +159,7 @@ def case5():
     timestep = (np.float64(0.0001))
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0] for i in range(len(particles))])
+        return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
     return particles, constraints, timestep, force
 
@@ -177,14 +177,14 @@ def case6():
     ]
 
     constraints: List[Constraint] = [
-        CircleConstraint(0, particles[0], np.array([50, 20]), np.float64(100)),
-        CircleConstraint(1, particles[0], np.array([100, 20]), np.float64(100))
+        CircleConstraint(0, particles[0], np.array([50, 20], dtype=np.float64), np.float64(100)),
+        CircleConstraint(1, particles[0], np.array([100, 20], dtype=np.float64), np.float64(100))
     ]
 
     timestep = np.float64(0.001)
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0]])
+        return np.array([[0, 0]], dtype=np.float64)
 
     return particles, constraints, timestep, force
 
