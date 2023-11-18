@@ -9,6 +9,7 @@ import numpy as np
 import pygame
 
 from Particle import Particle
+from drawers.Drawer import Drawer
 
 
 class Constraint(ABC):
@@ -32,6 +33,9 @@ class Constraint(ABC):
         self.dConstraint = jacfwd(self.constraintTime, argnums=1)
         self.d2Constraint = jacfwd(self.dConstraintTime, argnums=1)
 
+    @abstractmethod
+    def initDrawer(self):
+        pass
 
     @abstractmethod
     def getArgs(self) -> dict:
@@ -75,5 +79,5 @@ class Constraint(ABC):
         return {particle.i: constraintJacobian[particle.i][0] for particle in self.particles}
 
     @abstractmethod
-    def surface(self, surface: pygame.Surface, origin: np.ndarray):
+    def getDrawer(self) -> Drawer:
         pass

@@ -7,6 +7,7 @@ import pygame
 from Constraint import Constraint
 from Particle import Particle
 from PositionApproximation import constructPositionFunction
+from drawers.Drawer import Drawer
 
 
 class DistanceConstraint(Constraint):
@@ -16,6 +17,11 @@ class DistanceConstraint(Constraint):
         super().__init__(index, [particleA, particleB], DistanceConstraint.constraint,
                          DistanceConstraint.constraintTime)
         self.distance = distance
+        self.drawer = None
+
+    def initDrawer(self):
+        from drawers.DistanceConstraintDrawer import DistanceConstraintDrawer
+        self.drawer = DistanceConstraintDrawer(self)
 
     @staticmethod
     @jit
@@ -38,6 +44,5 @@ class DistanceConstraint(Constraint):
             "distance": self.distance
         }
 
-    def surface(self, surface: pygame.Surface, origin: np.ndarray):
-        a, b = self.particles[0].x + origin, self.particles[1].x + origin
-        pygame.draw.line(surface, (0, 0, 0), (float(a[0]), float(a[1])), (float(b[0]), float(b[1])))
+    def getDrawer(self) -> Drawer:
+        return self.drawer

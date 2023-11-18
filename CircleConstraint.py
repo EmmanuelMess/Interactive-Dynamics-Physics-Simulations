@@ -10,6 +10,7 @@ import PositionApproximation
 from Constraint import Constraint
 from Particle import Particle
 from PositionApproximation import constructPositionFunction
+from drawers.Drawer import Drawer
 
 
 class CircleConstraint(Constraint):
@@ -18,6 +19,11 @@ class CircleConstraint(Constraint):
     def __init__(self, index: int, particle: Particle, center: np.ndarray, radius: np.float64):
         super().__init__(index, [particle], CircleConstraint.constraint, CircleConstraint.constraintTime)
         self.center, self.radius = center, radius
+        self.drawer = None
+
+    def initDrawer(self):
+        from drawers.CircleConstraintDrawer import CircleConstraintDrawer
+        self.drawer = CircleConstraintDrawer(self)
 
     @staticmethod
     @jit
@@ -38,8 +44,5 @@ class CircleConstraint(Constraint):
             "radius": self.radius
         }
 
-    def surface(self, surface: pygame.Surface, origin: np.ndarray):
-        c = (float((self.center+origin)[0]), float((self.center+origin)[1]))
-        r = float(self.radius)
-        rect = pygame.Rect(c[0]-r, c[1]-r, r*2, r*2)
-        pygame.draw.ellipse(surface, (0, 0, 0), rect, width=1)
+    def getDrawer(self) -> Drawer:
+        return self.drawer

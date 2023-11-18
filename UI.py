@@ -23,6 +23,12 @@ class UI:
         self.screen = pygame.display.set_mode(self.size)
         self.font = pygame.font.SysFont("monospace", 11)
 
+        for constraint in self.constraints:
+            constraint.initDrawer()
+
+        for particle in self.particles:
+            particle.initDrawer()
+
     def showTime(self):
         label = self.font.render(f"t {self.simulation.getRunningTime()}s", 1, (0, 0, 0))
         self.screen.blit(label, (0, 0))
@@ -36,6 +42,10 @@ class UI:
                 label = self.font.render(string, 1, (0, 0, 0))
                 self.screen.blit(label, (10, yPositionValues))
 
+    def showText(self):
+        self.showTime()
+        self.showParticles()
+
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -46,13 +56,12 @@ class UI:
 
             self.screen.fill((255, 255, 255))
             for constraint in self.constraints:
-                constraint.surface(self.screen, self.origin)
+                constraint.getDrawer().draw(self.screen, self.origin)
             pygame.draw.line(self.screen, (0, 0, 0), (self.origin[0], 0), (self.origin[0], self.size[1]))
             pygame.draw.line(self.screen, (0, 0, 0), (0, self.origin[1]), (self.size[0], self.origin[1]))
             for particle in self.particles:
-                particle.draw(self.screen, self.origin)
-            self.showTime()
-            self.showParticles()
+                particle.getDrawer().draw(self.screen, self.origin)
+            self.showText()
             pygame.display.flip()
 
         pygame.quit()
