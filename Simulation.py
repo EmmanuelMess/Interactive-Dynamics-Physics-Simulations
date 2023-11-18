@@ -21,13 +21,17 @@ class Simulation:
 
         if self.printData:
             for particle in self.particles:
-                print("i", particle.i, "x", particle.x, "v", particle.v)
+                print("i", particle.index, "x", particle.x, "v", particle.v)
 
         for particle in self.particles:
-            particle.aApplied = self.force(self.t)[particle.i]
+            particle.aApplied = self.force(self.t)[particle.index]
             particle.a = particle.aApplied.copy()
 
         dq, Q, W, J, dJ, C, dC, lagrange = Simulation.matrices(self.particles, self.constraints)
+
+        res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm')
+
+        aConstraint = Simulation.precompiledForceCalculation(J, res.x)
 
         if self.printData:
             print("dq", dq)
@@ -42,20 +46,15 @@ class Simulation:
             print("C", C)
             print("dC", dC)
 
-        res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm')
-
-        if self.printData:
             print("l", res.x)
             print("f", lagrange(res.x))
 
-        aConstraint = (J.T @ res.x).reshape((-1, 2))
-
         for particle in self.particles:
-            particle.aConstraint = aConstraint[particle.i].copy()
+            particle.aConstraint = aConstraint[particle.index].copy()
             particle.a = particle.aApplied + particle.aConstraint
 
             if self.printData:
-                print("i", particle.i, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
+                print("i", particle.index, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
 
             particle.x = Simulation.x(particle.x, particle.v, particle.a, self.t)
             particle.v = Simulation.dx(particle.x, particle.v, particle.a, self.t)
@@ -64,6 +63,11 @@ class Simulation:
 
     def getRunningTime(self):
         return self.t
+
+    @staticmethod
+    @numba.jit(nopython=True)
+    def precompiledForceCalculation(J: np.ndarray, l: np.float64) -> np.ndarray:
+        return (J.T @ l).reshape((-1, 2))
 
     @staticmethod
     @numba.jit(nopython=True)
@@ -81,27 +85,27 @@ class Simulation:
 
         dq = np.zeros((n, d), dtype=np.float64)
         Q = np.zeros((n, d), dtype=np.float64)
-        C = np.zeros((m, 1), dtype=np.float64)
-        dC = np.zeros((m, 1), dtype=np.float64)
+        C = np.zeros((m,), dtype=np.float64)
+        dC = np.zeros((m,), dtype=np.float64)
         W = np.identity(n * d, dtype=np.float64) * weight
         J = np.zeros((m, n, d), dtype=np.float64)
         dJ = np.zeros((m, n, d), dtype=np.float64)
 
         for particle in particles:
-            dq[particle.i] = particle.v.copy()
-            Q[particle.i] = particle.a.copy()
+            dq[particle.index] = particle.v
+            Q[particle.index] = particle.a
 
         dq = dq.reshape((n * d, 1))
         Q = Q.reshape((n * d, 1))
 
         for constraint in constraints:
-            C[constraint.index, 0] = constraint.C()
-            dC[constraint.index, 0] = constraint.dC()
+            C[constraint.index] += constraint.C()
+            dC[constraint.index] += constraint.dC()
             JForConstraint = constraint.J()
             dJForConstraint = constraint.dJ()
             for j, particle in enumerate(constraint.particles):
-                J[constraint.index, particle.i] = JForConstraint[j]
-                dJ[constraint.index, particle.i] = dJForConstraint[j]
+                J[constraint.index, particle.index] += JForConstraint[j]
+                dJ[constraint.index, particle.index] += dJForConstraint[j]
 
         J = J.reshape((m, n * d))
         dJ = dJ.reshape((m, n * d))

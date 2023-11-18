@@ -4,7 +4,7 @@ from drawers.Drawer import Drawer
 
 
 class Particle:
-    i: int
+    index: int
     x: np.ndarray
     v: np.ndarray
     a: np.ndarray
@@ -12,7 +12,7 @@ class Particle:
     aConstraint: np.ndarray
 
     def __init__(self, i: int, x: np.ndarray, v: np.ndarray):
-        self.i, self.x, self.v = i, x, v
+        self.index, self.x, self.v = i, x, v
         self.a, self.aApplied, self.aConstraint = np.zeros_like(v), np.zeros_like(v), np.zeros_like(v)
         self.drawer = None
 

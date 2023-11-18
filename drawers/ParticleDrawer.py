@@ -14,7 +14,7 @@ class ParticleDrawer(Drawer):
     def __init__(self, particle: Particle):
         self.particle = particle
         self.font = pygame.font.SysFont("monospace", self.fontSize)
-        self.label = self.font.render(f"{self.particle.i}", True, (0, 0, 0))
+        self.label = self.font.render(f"{self.particle.index}", True, (0, 0, 0))
 
     def draw(self, surface: pygame.Surface, origin: np.ndarray):
         c = 100

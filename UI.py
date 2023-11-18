@@ -35,7 +35,7 @@ class UI:
 
     def showParticles(self):
         for yPositionParticle, particle in zip(count(10, 40), self.particles):
-            label = self.font.render(f"p {particle.i}", 1, (0, 0, 0))
+            label = self.font.render(f"p {particle.index}", 1, (0, 0, 0))
             self.screen.blit(label, (0, yPositionParticle))
 
             for yPositionValues, string in zip(count(yPositionParticle+10, 10), [f"x {particle.x}", f"v {particle.v}", f"a {particle.a}"]):
