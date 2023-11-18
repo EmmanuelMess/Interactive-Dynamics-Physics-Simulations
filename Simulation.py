@@ -64,8 +64,8 @@ class Simulation:
         d = 2
         n = len(particles)
         m = len(constraints)
-        ks = 0.0001
-        kd = 0.0001
+        ks = 0.1
+        kd = 1
 
         dq = np.zeros((n, d))
         Q = np.zeros((n, d))

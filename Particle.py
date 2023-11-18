@@ -15,7 +15,7 @@ class Particle:
         self.a, self.aApplied, self.aConstraint = np.zeros_like(v), np.zeros_like(v), np.zeros_like(v)
 
     def draw(self, surface: pygame.Surface, origin: np.ndarray):
-        c = 10
+        c = 100
         p = origin + self.x
         a = p + self.a * c
         aApplied = p + self.aApplied * c
