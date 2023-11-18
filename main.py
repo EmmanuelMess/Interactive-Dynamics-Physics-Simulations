@@ -24,12 +24,10 @@ def case1():
         CircleConstraint(0, particles[0], np.array([50, 20], dtype=np.float64), np.float64(100))
     ]
 
-    timestep = np.float64(0.001)
-
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0]], dtype=np.float64)
 
-    return particles, constraints, timestep, force
+    return particles, constraints, force
 
 
 def case2():
@@ -53,12 +51,10 @@ def case2():
         DistanceConstraint(0, particles[0], particles[1], np.float64(100))
     ]
 
-    timestep = np.float64(0.001)
-
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0], [0, 0]], dtype=np.float64)
 
-    return particles, constraints, timestep, force
+    return particles, constraints, force
 
 
 def case3():
@@ -83,12 +79,10 @@ def case3():
         DistanceConstraint(1, particles[0], particles[1], np.float64(20)),
     ]
 
-    timestep = (np.float64(0.001))
-
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0], [0, 0]], dtype=np.float64)
 
-    return particles, constraints, timestep, force
+    return particles, constraints, force
 
 
 def case4():
@@ -119,12 +113,10 @@ def case4():
         DistanceConstraint(10, particles[5], particles[6], np.float64(25)),
     ]
 
-    timestep = (np.float64(0.0001))
-
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
-    return particles, constraints, timestep, force
+    return particles, constraints, force
 
 
 def case5():
@@ -156,12 +148,10 @@ def case5():
         DistanceConstraint(11, particles[5], particles[6], np.float64(25)),
     ]
 
-    timestep = (np.float64(0.0001))
-
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
-    return particles, constraints, timestep, force
+    return particles, constraints, force
 
 
 def case6():
@@ -181,16 +171,15 @@ def case6():
         CircleConstraint(1, particles[0], np.array([100, 20], dtype=np.float64), np.float64(100))
     ]
 
-    timestep = np.float64(0.001)
-
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0]], dtype=np.float64)
 
-    return particles, constraints, timestep, force
+    return particles, constraints, force
 
 
 def main():
-    particles, constraints, timestep, force = case3()
+    timestep = (np.float64(0.0001))
+    particles, constraints, force = case4()
     simulation = Simulation(particles, constraints, timestep, force)
     ui = UI(particles, constraints, simulation, timestep)
     ui.run()
