@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 
 from typing import List, Callable
 
+import jax
 import jax.numpy as jnp
-from jax import jit, grad, jacfwd
+from jax import grad, jacfwd
 
 import numpy as np
-import pygame
 
 from Particle import Particle
 from drawers.Drawer import Drawer
@@ -18,7 +18,6 @@ class Constraint(ABC):
 
     @abstractmethod
     def __init__(self, index: int, particles: List[Particle],
-                 constraint: Callable[[jnp.ndarray, dict], jnp.float64],
                  constraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64]):
         """
 
@@ -27,11 +26,11 @@ class Constraint(ABC):
         :param constraintTime: A function of time that can be derived on t=0 to obtain the constraints, the second
         parameter is getParticleMatrix() and the third is getArgs(). The function passed should be pure and precompiled
         """
-        self.index, self.particles, self.constraintTime = index, particles, constraintTime
-        self.dConstraintTime = grad(self.constraintTime, argnums=0)
-        self.d2ConstraintTime = grad(self.dConstraintTime, argnums=0)
-        self.dConstraint = jacfwd(self.constraintTime, argnums=1)
-        self.d2Constraint = jacfwd(self.dConstraintTime, argnums=1)
+        self.index, self.particles, self.constraintTime = index, particles, jax.jit(constraintTime)
+        self.dConstraintTime = jax.jit(grad(self.constraintTime, argnums=0))
+        self.d2ConstraintTime = jax.jit(grad(self.dConstraintTime, argnums=0))
+        self.dConstraint = jax.jit(jacfwd(self.constraintTime, argnums=1))
+        self.d2Constraint = jax.jit(jacfwd(self.dConstraintTime, argnums=1))
 
     @abstractmethod
     def initDrawer(self):
@@ -68,15 +67,13 @@ class Constraint(ABC):
     def d2C(self) -> np.float64:
         return self.d2ConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
 
-    def J(self) -> dict:
+    def J(self) -> np.array:
         constraintJacobian = self.dConstraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
+        return constraintJacobian[:, 0]# Take only interesting derivatives
 
-        return { particle.i: constraintJacobian[particle.i][0] for particle in self.particles }
-
-    def dJ(self) -> dict:
+    def dJ(self) -> np.array:
         constraintJacobian = self.d2Constraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
-
-        return {particle.i: constraintJacobian[particle.i][0] for particle in self.particles}
+        return constraintJacobian[:, 0]# Take only interesting derivatives
 
     @abstractmethod
     def getDrawer(self) -> Drawer:

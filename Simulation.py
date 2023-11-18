@@ -2,6 +2,7 @@ from typing import List, Callable
 
 import numpy as np
 from scipy.optimize import root
+import numba
 
 from Constraint import Constraint
 from Particle import Particle
@@ -65,12 +66,18 @@ class Simulation:
         return self.t
 
     @staticmethod
+    @numba.jit(nopython=True)
+    def precompiledLagrange(dq: np.ndarray, Q: np.ndarray, W: np.ndarray, J: np.ndarray, dJ: np.ndarray, C: np.ndarray,
+                            dC: np.ndarray, ks: np.float64, kd: np.float64, l: np.float64):
+        return ((J @ W @ J.T) * l.T + dJ @ dq + J @ W @ Q + ks * C + kd * dC).reshape((-1,))
+
+    @staticmethod
     def matrices(particles: List[Particle], constraints: List[Constraint], weight: np.float64 = 1):
         d = 2
         n = len(particles)
         m = len(constraints)
-        ks = 0.1
-        kd = 1
+        ks = np.float64(0.1)
+        kd = np.float64(1)
 
         dq = np.zeros((n, d), dtype=np.float64)
         Q = np.zeros((n, d), dtype=np.float64)
@@ -81,9 +88,8 @@ class Simulation:
         dJ = np.zeros((m, n, d), dtype=np.float64)
 
         for particle in particles:
-            for k in range(d):
-                dq[particle.i] = particle.v.copy()
-                Q[particle.i] = particle.a.copy()
+            dq[particle.i] = particle.v.copy()
+            Q[particle.i] = particle.a.copy()
 
         dq = dq.reshape((n * d, 1))
         Q = Q.reshape((n * d, 1))
@@ -91,16 +97,16 @@ class Simulation:
         for constraint in constraints:
             C[constraint.index, 0] = constraint.C()
             dC[constraint.index, 0] = constraint.dC()
-            for j, value in constraint.J().items():
-                J[constraint.index, j] = value.copy()
-            for j, value in constraint.dJ().items():
-                dJ[constraint.index, j] = value.copy()
+            JForConstraint = constraint.J()
+            dJForConstraint = constraint.dJ()
+            for j, particle in enumerate(constraint.particles):
+                J[constraint.index, particle.i] = JForConstraint[j]
+                dJ[constraint.index, particle.i] = dJForConstraint[j]
 
         J = J.reshape((m, n * d))
         dJ = dJ.reshape((m, n * d))
 
-        def lagrange(l):
-            return ((J @ W @ J.T) * l.T + dJ @ dq + J @ W @ Q + ks * C + kd * dC).reshape((-1,))
+        lagrange = lambda l: Simulation.precompiledLagrange(dq, Q, W, J, dJ, C, dC, ks, kd, l)
 
         return dq, Q, W, J, dJ, C, dC, lagrange
 

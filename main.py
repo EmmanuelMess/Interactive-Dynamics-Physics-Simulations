@@ -179,8 +179,8 @@ def case6():
 
 def main():
     timestep = (np.float64(0.0001))
-    particles, constraints, force = case4()
-    simulation = Simulation(particles, constraints, timestep, force)
+    particles, constraints, force = case3()
+    simulation = Simulation(particles, constraints, timestep, force, False)
     ui = UI(particles, constraints, simulation, timestep)
     ui.run()
 

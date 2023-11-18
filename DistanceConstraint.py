@@ -14,8 +14,7 @@ class DistanceConstraint(Constraint):
     distance: np.float64
 
     def __init__(self, index: int, particleA: Particle, particleB: Particle, distance: np.float64):
-        super().__init__(index, [particleA, particleB], DistanceConstraint.constraint,
-                         DistanceConstraint.constraintTime)
+        super().__init__(index, [particleA, particleB], DistanceConstraint.constraintTime)
         self.distance = distance
         self.drawer = None
 

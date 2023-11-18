@@ -1,7 +1,7 @@
 from typing import Any, Callable
 
 import jax.numpy as jnp
-from jax import jit, grad
+import jax
 
 import numpy as np
 import pygame
@@ -17,7 +17,7 @@ class CircleConstraint(Constraint):
     radius: np.float64
 
     def __init__(self, index: int, particle: Particle, center: np.ndarray, radius: np.float64):
-        super().__init__(index, [particle], CircleConstraint.constraint, CircleConstraint.constraintTime)
+        super().__init__(index, [particle], CircleConstraint.constraintTime)
         self.center, self.radius = center, radius
         self.drawer = None
 
@@ -26,13 +26,13 @@ class CircleConstraint(Constraint):
         self.drawer = CircleConstraintDrawer(self)
 
     @staticmethod
-    @jit
+    @jax.jit
     def constraint(x: jnp.ndarray, params: dict) -> jnp.float64:
         pPosition = x[0]
         return jnp.sum((pPosition - params["center"]) ** 2) / 2 - (params["radius"] ** 2) / 2
 
     @staticmethod
-    @jit
+    @jax.jit
     def constraintTime(t: jnp.float64, x: jnp.ndarray, params: dict) -> jnp.float64:
         p = x[0]
         positionApproximation = constructPositionFunction(p[0], p[1], p[2])
