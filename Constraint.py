@@ -64,9 +64,6 @@ class Constraint(ABC):
     def dC(self) -> np.float64:
         return self.dConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
 
-    def d2C(self) -> np.float64:
-        return self.d2ConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
-
     def J(self) -> np.array:
         constraintJacobian = self.dConstraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
         return constraintJacobian[:, 0]# Take only interesting derivatives

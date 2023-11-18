@@ -34,7 +34,7 @@ class UI:
         self.screen.blit(label, (0, 0))
 
     def showParticles(self):
-        for yPositionParticle, particle in zip(count(10, 40), self.particles):
+        for yPositionParticle, particle in zip(count(20, 40), self.particles):
             label = self.font.render(f"p {particle.index}", 1, (0, 0, 0))
             self.screen.blit(label, (0, yPositionParticle))
 
@@ -42,8 +42,13 @@ class UI:
                 label = self.font.render(string, 1, (0, 0, 0))
                 self.screen.blit(label, (10, yPositionValues))
 
+    def showError(self):
+        label = self.font.render(f"error {self.simulation.error}", 1, (0, 0, 0))
+        self.screen.blit(label, (0, 10))
+
     def showText(self):
         self.showTime()
+        self.showError()
         self.showParticles()
 
     def run(self):

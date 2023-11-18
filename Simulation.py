@@ -13,6 +13,7 @@ class Simulation:
                  force: Callable[[np.float64], np.ndarray], printData: bool = False):
         self.particles, self.constraints, self.timestep, self.force, self.printData = particles, constraints, timestep, force, printData
         self.t = np.float64(0)
+        self.error = np.float64(0)
 
     def update(self):
         if self.printData:
@@ -24,7 +25,7 @@ class Simulation:
                 print("i", particle.index, "x", particle.x, "v", particle.v)
 
         for particle in self.particles:
-            particle.aApplied = self.force(self.t)[particle.index]
+            particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
         dq, Q, W, J, dJ, C, dC, lagrange = Simulation.matrices(self.particles, self.constraints)
@@ -32,6 +33,8 @@ class Simulation:
         res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm')
 
         aConstraint = Simulation.precompiledForceCalculation(J, res.x)
+
+        self.error = np.sqrt(np.sum(lagrange(res.x)**2))
 
         if self.printData:
             print("dq", dq)
