@@ -2,10 +2,9 @@ from itertools import count
 
 import pygame
 import numpy as np
-import time
 from typing import List
 
-from Constraint import Constraint
+from constraints.Constraint import Constraint
 from Particle import Particle
 from Simulation import Simulation
 

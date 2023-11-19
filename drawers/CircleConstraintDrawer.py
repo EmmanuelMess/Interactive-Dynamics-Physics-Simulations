@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
 
-from CircleConstraint import CircleConstraint
+from constraints.CircleConstraint import CircleConstraint
 from drawers.Drawer import Drawer
 
 

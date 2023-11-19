@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
 
-from DistanceConstraint import DistanceConstraint
+from constraints.DistanceConstraint import DistanceConstraint
 from drawers.Drawer import Drawer
 
 

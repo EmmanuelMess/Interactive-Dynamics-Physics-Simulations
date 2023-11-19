@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import root
 import numba
 
-from Constraint import Constraint
+from constraints.Constraint import Constraint
 from Particle import Particle
 
 
