@@ -12,3 +12,6 @@ class DistanceConstraintDrawer(Drawer):
     def draw(self, surface: pygame.Surface, origin: np.ndarray):
         a, b = self.distanceConstraint.particles[0].x + origin, self.distanceConstraint.particles[1].x + origin
         pygame.draw.line(surface, (0, 0, 0), a, b)
+
+    def getText(self) -> str:
+        return ""

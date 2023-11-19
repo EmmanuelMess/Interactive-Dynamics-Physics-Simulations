@@ -14,3 +14,6 @@ class CircleConstraintDrawer(Drawer):
         r = self.circleConstraint.radius
         rect = pygame.Rect(c[0] - r, c[1] - r, r * 2, r * 2)
         pygame.draw.ellipse(surface, (0, 0, 0), rect, width=1)
+
+    def getText(self) -> str:
+        return ""

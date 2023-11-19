@@ -18,7 +18,7 @@ class CircleConstraint(Constraint):
 
     def initDrawer(self):
         from drawers.CircleConstraintDrawer import CircleConstraintDrawer
-        self.drawer = CircleConstraintDrawer(self)
+        self.setDrawer(CircleConstraintDrawer(self))
 
     def getArgs(self) -> dict:
         return {
@@ -26,5 +26,3 @@ class CircleConstraint(Constraint):
             "radius": self.radius
         }
 
-    def getDrawer(self) -> Drawer:
-        return self.drawer

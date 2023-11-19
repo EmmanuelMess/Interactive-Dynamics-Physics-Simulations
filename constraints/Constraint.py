@@ -7,10 +7,10 @@ import jax.numpy as jnp
 import numpy as np
 
 from Particle import Particle
-from drawers.Drawer import Drawer
+from drawers.Drawable import Drawable
 
 
-class Constraint(ABC):
+class Constraint(ABC, Drawable):
     particles: List[Particle]
     index: int
 
@@ -25,12 +25,9 @@ class Constraint(ABC):
         :param particles: All particles that are affected by this constraint
         For the rest of the parameters pass the result from Constraint.computeDerivatives
         """
+        super().__init__()
         self.index, self.particles = index, particles
         self.constraintTime, self.dConstraintTime, self.dConstraint, self.d2Constraint = constraintTime, dConstraintTime, dConstraint, d2Constraint
-
-    @abstractmethod
-    def initDrawer(self):
-        pass
 
     @abstractmethod
     def getArgs(self) -> dict:
@@ -60,6 +57,3 @@ class Constraint(ABC):
         constraintJacobian = self.d2Constraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
         return constraintJacobian[:, 0]  # Only get the position derivative  # TODO jit this select
 
-    @abstractmethod
-    def getDrawer(self) -> Drawer:
-        pass

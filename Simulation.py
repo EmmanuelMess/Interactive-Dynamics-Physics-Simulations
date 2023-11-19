@@ -6,14 +6,21 @@ import numba
 
 from constraints.Constraint import Constraint
 from Particle import Particle
+from drawers.Drawable import Drawable
+from drawers.Drawer import Drawer
 
 
-class Simulation:
+class Simulation(Drawable):
     def __init__(self, particles: List[Particle], constraints: List[Constraint], timestep: np.float64,
                  force: Callable[[np.float64], np.ndarray], printData: bool = False):
+        super().__init__()
         self.particles, self.constraints, self.timestep, self.force, self.printData = particles, constraints, timestep, force, printData
         self.t = np.float64(0)
         self.error = np.float64(0)
+
+    def initDrawer(self):
+        from drawers.SimulationDrawer import SimulationDrawer
+        self.setDrawer(SimulationDrawer(self))
 
     def update(self):
         if self.printData:

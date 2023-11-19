@@ -11,3 +11,7 @@ class Drawer(ABC):
     @abstractmethod
     def draw(self, surface: pygame.Surface, origin: np.ndarray):
         pass
+
+    @abstractmethod
+    def getText(self) -> str:
+        pass

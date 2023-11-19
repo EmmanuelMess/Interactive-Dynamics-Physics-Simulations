@@ -4,14 +4,13 @@ import pygame
 import numpy as np
 from typing import List
 
-from constraints.Constraint import Constraint
-from Particle import Particle
 from Simulation import Simulation
+from drawers.Drawable import Drawable
 
 
 class UI:
-    def __init__(self, particles: List[Particle], constraints: List[Constraint], simulation: Simulation, timestep: np.float64):
-        self.particles, self.constraints, self.simulation, self.timestep = particles, constraints, simulation, timestep
+    def __init__(self, drawables: List[Drawable], timestep: np.float64):
+        self.drawables, self.timestep = drawables, timestep
         self.size = [500, 500]
         self.origin = np.array(self.size)/2
         self.running = True
@@ -22,51 +21,25 @@ class UI:
         self.screen = pygame.display.set_mode(self.size)
         self.font = pygame.font.SysFont("monospace", 11)
 
-        for constraint in self.constraints:
-            constraint.initDrawer()
+        for drawable in self.drawables:
+            drawable.initDrawer()
 
-        for particle in self.particles:
-            particle.initDrawer()
+    def showDrawables(self):
+        allText = []
 
-    def showTime(self):
-        label = self.font.render(f"t {self.simulation.getRunningTime()}s", 1, (0, 0, 0))
-        self.screen.blit(label, (0, 0))
+        for text in self.drawables:
+            allText += text.getDrawer().getText().split("\n")
 
-    def showParticles(self):
-        for yPositionParticle, particle in zip(count(20, 40), self.particles):
-            label = self.font.render(f"p {particle.index}", 1, (0, 0, 0))
-            self.screen.blit(label, (0, yPositionParticle))
+        for yPositionTextLine, string in zip(count(0, 10), allText):
+            label = self.font.render(string, 1, (0, 0, 0))
+            self.screen.blit(label, (0, yPositionTextLine))
 
-            for yPositionValues, string in zip(count(yPositionParticle+10, 10), [f"x {particle.x}", f"v {particle.v}", f"a {particle.a}"]):
-                label = self.font.render(string, 1, (0, 0, 0))
-                self.screen.blit(label, (10, yPositionValues))
-
-    def showError(self):
-        label = self.font.render(f"error {self.simulation.error}", 1, (0, 0, 0))
-        self.screen.blit(label, (0, 10))
-
-    def showText(self):
-        self.showTime()
-        self.showError()
-        self.showParticles()
-
-    def run(self):
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-
-            self.simulation.update()
-
-            self.screen.fill((255, 255, 255))
-            for constraint in self.constraints:
-                constraint.getDrawer().draw(self.screen, self.origin)
-            pygame.draw.line(self.screen, (0, 0, 0), (self.origin[0], 0), (self.origin[0], self.size[1]))
-            pygame.draw.line(self.screen, (0, 0, 0), (0, self.origin[1]), (self.size[0], self.origin[1]))
-            for particle in self.particles:
-                particle.getDrawer().draw(self.screen, self.origin)
-            self.showText()
-            pygame.display.flip()
-
-        pygame.quit()
+    def update(self):
+        self.screen.fill((255, 255, 255))
+        for drawable in self.drawables:
+            drawable.getDrawer().draw(self.screen, self.origin)
+        pygame.draw.line(self.screen, (0, 0, 0), (self.origin[0], 0), (self.origin[0], self.size[1]))
+        pygame.draw.line(self.screen, (0, 0, 0), (0, self.origin[1]), (self.size[0], self.origin[1]))
+        self.showDrawables()
+        pygame.display.flip()
 

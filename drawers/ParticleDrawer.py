@@ -27,3 +27,9 @@ class ParticleDrawer(Drawer):
         pygame.draw.line(surface, (255, 0, 0), p, aConstraint)
         pygame.draw.circle(surface, (0, 0, 255), p, self.radius)
         surface.blit(self.label, p + np.array([self.radius*0.5, self.radius*0.5]))
+
+    def getText(self) -> str:
+        return (f"p {self.particle.index}\n"
+                f"  x {self.particle.x}\n"
+                f"  v {self.particle.v}\n"
+                f"  a {self.particle.a}")

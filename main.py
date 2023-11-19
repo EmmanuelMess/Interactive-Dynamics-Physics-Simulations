@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List
 
+import pygame
+
 from constraints.CircleConstraint import CircleConstraint
 from constraints.Constraint import Constraint
 from constraints.DistanceConstraint import DistanceConstraint
@@ -163,6 +165,20 @@ def case6():
     return particles, constraints, force
 
 
+def run(simulation: Simulation, ui: UI):
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        simulation.update()
+
+        ui.update()
+
+    pygame.quit()
+
+
 def main():
     print("Loading derivatives...", end="")
     CircleConstraintFunctions()
@@ -172,8 +188,8 @@ def main():
     timestep = (np.float64(0.0001))
     particles, constraints, force = case5()
     simulation = Simulation(particles, constraints, timestep, force, False)
-    ui = UI(particles, constraints, simulation, timestep)
-    ui.run()
+    ui = UI([simulation]+particles+constraints, timestep)
+    run(simulation, ui)
 
 
 if __name__ == '__main__':

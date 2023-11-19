@@ -8,8 +8,6 @@ from Singleton import Singleton
 
 
 class ConstraintFunctions:
-    __metaclass__ = Singleton
-
     @staticmethod
     def computeDerivatives(constraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64]):
         """
