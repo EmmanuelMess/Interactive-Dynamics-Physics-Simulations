@@ -27,6 +27,7 @@ class Constraint(ABC):
         parameter is getParticleMatrix() and the third is getArgs(). The function passed should be pure and precompiled
         """
         self.index, self.particles, self.constraintTime = index, particles, jax.jit(constraintTime)
+        # TODO compute the value and derivative at the same time (as optimization)
         self.dConstraintTime = jax.jit(grad(self.constraintTime, argnums=0))
         self.d2ConstraintTime = jax.jit(grad(self.dConstraintTime, argnums=0))
         self.dConstraint = jax.jit(jacfwd(self.constraintTime, argnums=1))
@@ -50,14 +51,6 @@ class Constraint(ABC):
 
         return jnp.array(particleMatrix)
 
-    def getParticlePositionMatrix(self) -> jnp.ndarray:
-        particleMatrix = np.empty((len(self.particles), 2))
-
-        for i, particle in enumerate(self.particles):
-            particleMatrix[i] = particle.x
-
-        return jnp.array(particleMatrix)
-
     def C(self) -> np.float64:
         return self.constraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
 
@@ -65,12 +58,12 @@ class Constraint(ABC):
         return self.dConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
 
     def J(self) -> np.array:
-        constraintJacobian = self.dConstraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
-        return constraintJacobian
+        constraintJacobian = self.dConstraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+        return constraintJacobian[:, 0] # Only get the position derivative
 
     def dJ(self) -> np.array:
-        constraintJacobian = self.d2Constraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
-        return constraintJacobian
+        constraintJacobian = self.d2Constraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+        return constraintJacobian[:, 0] # Only get the position derivative
 
     @abstractmethod
     def getDrawer(self) -> Drawer:

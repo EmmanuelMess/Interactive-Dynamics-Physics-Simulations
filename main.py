@@ -53,7 +53,7 @@ def case3():
     Circle and distance constraints multi particles
     """
     particles: List[Particle] = [
-        Particle(0, np.array([25, 0], dtype=np.float64)),
+        Particle(0, np.array([0, 0], dtype=np.float64)),
         Particle(1, np.array([25, 25], dtype=np.float64))
     ]
 
@@ -161,8 +161,8 @@ def case6():
 
 def main():
     timestep = (np.float64(0.0001))
-    particles, constraints, force = (case2())
-    simulation = Simulation(particles, constraints, timestep, force, True)
+    particles, constraints, force = (case6())
+    simulation = Simulation(particles, constraints, timestep, force, False)
     ui = UI(particles, constraints, simulation, timestep)
     ui.run()
 
