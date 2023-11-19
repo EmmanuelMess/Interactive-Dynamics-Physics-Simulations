@@ -11,9 +11,9 @@ class Particle:
     aApplied: np.ndarray
     aConstraint: np.ndarray
 
-    def __init__(self, i: int, x: np.ndarray, v: np.ndarray):
-        self.index, self.x, self.v = i, x, v
-        self.a, self.aApplied, self.aConstraint = np.zeros_like(v), np.zeros_like(v), np.zeros_like(v)
+    def __init__(self, i: int, x: np.ndarray):
+        self.index, self.x = i, x
+        self.v, self.a, self.aApplied, self.aConstraint = np.zeros_like(x), np.zeros_like(x), np.zeros_like(x), np.zeros_like(x)
         self.drawer = None
 
     def initDrawer(self):

@@ -13,11 +13,7 @@ def case1():
     Circle constrant single particle
     """
     particles: List[Particle] = [
-        Particle(
-            0,
-            np.array([25, 0], dtype=np.float64),
-            np.array([0.0, 0.0], dtype=np.float64)
-        )
+        Particle(0, np.array([25, 0], dtype=np.float64))
     ]
 
     constraints: List[Constraint] = [
@@ -35,24 +31,19 @@ def case2():
     Distance constraint single particle
     """
     particles: List[Particle] = [
-        Particle(
-            0,
-             np.array([25, 0], dtype=np.float64),
-             np.array([0.0, 0.0], dtype=np.float64)
-        ),
-        Particle(
-            1,
-            np.array([25, 25], dtype=np.float64),
-            np.array([0.0, 0.0], dtype=np.float64)
-        )
+        Particle(0, np.array([50, 25], dtype=np.float64)),
+        Particle(1, np.array([50, 50], dtype=np.float64)),
+        Particle(2, np.array([25, 0], dtype=np.float64)),
+        Particle(3, np.array([0, 0], dtype=np.float64)),
     ]
 
     constraints: List[Constraint] = [
-        DistanceConstraint(0, particles[0], particles[1], np.float64(100))
+        DistanceConstraint(0, particles[0], particles[1], np.float64(100)),
+        DistanceConstraint(1, particles[2], particles[3], np.float64(100)),
     ]
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[0, 0], [0, 0]], dtype=np.float64)
+        return np.array([[0, 0], [0, 0], [0, 0], [0, 0]], dtype=np.float64)
 
     return particles, constraints, force
 
@@ -62,16 +53,8 @@ def case3():
     Circle and distance constraints multi particles
     """
     particles: List[Particle] = [
-        Particle(
-            0,
-             np.array([25, 0], dtype=np.float64),
-             np.array([0.0, 0.0], dtype=np.float64)
-        ),
-        Particle(
-            1,
-            np.array([25, 25], dtype=np.float64),
-            np.array([0.0, 0.0], dtype=np.float64)
-        )
+        Particle(0, np.array([25, 0], dtype=np.float64)),
+        Particle(1, np.array([25, 25], dtype=np.float64))
     ]
 
     constraints: List[Constraint] = [
@@ -90,13 +73,13 @@ def case4():
     Distance constraints multi particles
     """
     particles: List[Particle] = [
-        Particle(0, np.array([0, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(1, np.array([25, -25], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(2, np.array([50, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(3, np.array([75, -25], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(4, np.array([100, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(5, np.array([125, -25], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(6, np.array([150, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
+        Particle(0, np.array([0, 0], dtype=np.float64)),
+        Particle(1, np.array([25, -25], dtype=np.float64)),
+        Particle(2, np.array([50, 0], dtype=np.float64)),
+        Particle(3, np.array([75, -25], dtype=np.float64)),
+        Particle(4, np.array([100, 0], dtype=np.float64)),
+        Particle(5, np.array([125, -25], dtype=np.float64)),
+        Particle(6, np.array([150, 0], dtype=np.float64)),
     ]
 
     constraints: List[Constraint] = [
@@ -124,13 +107,13 @@ def case5():
     Distance constraints multi particles
     """
     particles: List[Particle] = [
-        Particle(0, np.array([0, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(1, np.array([25, -25], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(2, np.array([50, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(3, np.array([75, -25], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(4, np.array([100, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(5, np.array([125, -25], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
-        Particle(6, np.array([150, 0], dtype=np.float64), np.array([0.0, 0.0], dtype=np.float64)),
+        Particle(0, np.array([0, 0], dtype=np.float64)),
+        Particle(1, np.array([25, -25], dtype=np.float64)),
+        Particle(2, np.array([50, 0], dtype=np.float64)),
+        Particle(3, np.array([75, -25], dtype=np.float64)),
+        Particle(4, np.array([100, 0], dtype=np.float64)),
+        Particle(5, np.array([125, -25], dtype=np.float64)),
+        Particle(6, np.array([150, 0], dtype=np.float64)),
     ]
 
     constraints: List[Constraint] = [
@@ -162,7 +145,6 @@ def case6():
         Particle(
             0,
             np.array([25, 0], dtype=np.float64),
-            np.array([0.0, 0.0], dtype=np.float64)
         )
     ]
 

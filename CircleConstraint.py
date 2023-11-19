@@ -36,7 +36,7 @@ class CircleConstraint(Constraint):
     def constraintTime(t: jnp.float64, x: jnp.ndarray, params: dict) -> jnp.float64:
         p = x[0]
         positionApproximation = constructPositionFunction(p[0], p[1], p[2])
-        return CircleConstraint.constraint(jnp.array([positionApproximation(t)]), params)
+        return CircleConstraint.constraint(jnp.array([positionApproximation(t)]), params)#TODO fix this array() call
 
     def getArgs(self) -> dict:
         return {

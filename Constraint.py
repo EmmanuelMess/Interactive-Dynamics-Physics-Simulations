@@ -66,11 +66,11 @@ class Constraint(ABC):
 
     def J(self) -> np.array:
         constraintJacobian = self.dConstraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
-        return constraintJacobian[:, 0]# Take only interesting derivatives
+        return constraintJacobian
 
     def dJ(self) -> np.array:
         constraintJacobian = self.d2Constraint(jnp.float64(0), self.getParticlePositionMatrix(), self.getArgs())
-        return constraintJacobian[:, 0]# Take only interesting derivatives
+        return constraintJacobian
 
     @abstractmethod
     def getDrawer(self) -> Drawer:

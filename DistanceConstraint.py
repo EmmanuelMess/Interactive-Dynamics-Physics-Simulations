@@ -36,7 +36,7 @@ class DistanceConstraint(Constraint):
         b = x[1]
         positionApproximationA = constructPositionFunction(a[0], a[1], a[2])
         positionApproximationB = constructPositionFunction(b[0], b[1], b[2])
-        return DistanceConstraint.constraint(jnp.array([positionApproximationA(t), positionApproximationB(t)]), params)
+        return DistanceConstraint.constraint(jnp.array([positionApproximationA(t), positionApproximationB(t)]), params)#TODO fix this array() call
 
     def getArgs(self) -> dict:
         return {
