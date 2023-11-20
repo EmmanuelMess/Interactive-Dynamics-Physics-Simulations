@@ -1,6 +1,11 @@
 #  Interactive Dynamics for Physics Simulations
 
 This is a test made for the [Constraint Based Simulator](https://github.com/EmmanuelMess/ConstraintBasedSimulator). It provides a constraint satisfaction physics simulator with automatic differentiation.
+
+## Screenshots
+
+<img src="./screenshots/1.png"/>
+
 ## Usage
 
 ### Setup
@@ -18,13 +23,17 @@ python3 main.py
 ## Adding functionality
 
 Generate a new `Constraint` subclass and use it in a case.
+
 ## Design
 
 <img src="./design/class-diagram.png"/>
 
 ## Thanks
 * [Interactive Dynamics](https://dl.acm.org/doi/pdf/10.1145/91394.91400) by Andrew Witkin, Michael Gleicher and William Welch
-* 
+* [An Introduction to Physically Based Modeling: Constrained Dynamics](https://www.cs.cmu.edu/~baraff/pbm/constraints.pdf) by Andrew Witkin
+* [Constrained dynamics](https://sites.cc.gatech.edu/classes/AY2017/cs7496_fall/slides/ConstrDyn.pdf) by Karen Liu
+* [JAX](https://jax.readthedocs.io/en/latest/notebooks/quickstart.html) by The JAX Authors
+* [pygame](https://www.pygame.org) by the pygame community
 
 ## License
 
