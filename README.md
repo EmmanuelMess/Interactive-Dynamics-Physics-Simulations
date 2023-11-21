@@ -4,7 +4,9 @@ This is a test made for the [Constraint Based Simulator](https://github.com/Emma
 
 ## Screenshots
 
-<img src="./screenshots/1.png"/>
+<img src="./screenshots/1.gif"/> <img src="./screenshots/2.gif"/>
+
+<img src="./screenshots/3.gif"/>
 
 ## Usage
 
@@ -27,6 +29,10 @@ Generate a new `Constraint` subclass and use it in a case.
 ## Design
 
 <img src="./design/class-diagram.png"/>
+
+## Math
+
+
 
 ## Thanks
 * [Interactive Dynamics](https://dl.acm.org/doi/pdf/10.1145/91394.91400) by Andrew Witkin, Michael Gleicher and William Welch
