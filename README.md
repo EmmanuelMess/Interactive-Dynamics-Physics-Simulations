@@ -30,9 +30,52 @@ Generate a new `Constraint` subclass and use it in a case.
 
 <img src="./design/class-diagram.png"/>
 
-## Math
+## Math for a single particle
 
+This explanation is meant to complement the references, please read that first. This explains
+how to compute the derivates with respect to time and position.
 
+C(t) is a constraint function so that:
+
+$$ \exists t / C(t) = 0 \land \exists \dot{C} $$
+
+To obtain the constraint as a function of particle position (instead of time) we use:
+
+$$ \exists \widetilde{C}(x) / \widetilde{C}(x(t)) = C(t) $$
+
+We don't have x(t) analitically, but we can use an approximation:
+
+$$ \widetilde{C}(\widetilde{x}(t)) \approx C(t) $$
+
+$$ \exists \widetilde{x}(0) \approx x(t) / \widetilde{x}(0) = x_t \land \dot{\widetilde{x}}(0) = v_t \land \ddot{\widetilde{x}}(0) = a_t$$
+
+I use a Taylor approximation at t = 0:
+
+$$ \widetilde{x}(t) = x + t * v + \frac{1}{2} * t^2 * a $$
+
+And that lets us compute the derivatives:
+
+$$ C $$
+
+$$ \dot{C} $$
+
+$$
+J = \begin{bmatrix}
+ \frac{\partial \widetilde{C}}{\partial x_1} & \frac{\partial \widetilde{C}}{\partial x_2}  \\
+\end{bmatrix}
+$$
+
+$$
+\dot{J} = \begin{bmatrix}
+ \frac{\partial \dot{\widetilde{C}}}{\partial x_1} & \frac{\partial \dot{\widetilde{C}}}{\partial x_2}  \\
+\end{bmatrix}
+$$
+
+With these we can compute the lagrangain for:
+
+$$
+(J W J^T) {\lambda}^T + \dot{J} \dot{\widetilde{x}} + J W \ddot{\widetilde{x}} + k_s C + k_d \dot{C}
+$$
 
 ## Thanks
 * [Interactive Dynamics](https://dl.acm.org/doi/pdf/10.1145/91394.91400) by Andrew Witkin, Michael Gleicher and William Welch
