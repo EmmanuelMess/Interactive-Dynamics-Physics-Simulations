@@ -51,9 +51,9 @@ class Constraint(ABC, Drawable):
 
     def J(self) -> np.array:
         constraintJacobian = self.dConstraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
-        return constraintJacobian[:, 0]  # Only get the position derivative  # TODO jit this select
+        return constraintJacobian
 
     def dJ(self) -> np.array:
         constraintJacobian = self.d2Constraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
-        return constraintJacobian[:, 0]  # Only get the position derivative  # TODO jit this select
+        return constraintJacobian
 

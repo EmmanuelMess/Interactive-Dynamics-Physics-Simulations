@@ -16,6 +16,8 @@ class ConstraintFunctions:
         """
         constraintTime = jax.jit(constraintTime)
         dConstraintTime = jax.jit(grad(constraintTime, argnums=0))
-        dConstraint = jax.jit(jacfwd(constraintTime, argnums=1))
-        d2Constraint = jax.jit(jacfwd(dConstraintTime, argnums=1))
+        dConstraint = lambda t, particleMatrix, args: jacfwd(constraintTime, argnums=1)(t, particleMatrix, args)[:, 0] # Only get the position derivative
+        dConstraint = jax.jit(dConstraint)
+        d2Constraint = lambda t, particleMatrix, args: jacfwd(dConstraintTime, argnums=1)(t, particleMatrix, args)[:, 0] # Only get the position derivative
+        d2Constraint = jax.jit(d2Constraint)
         return constraintTime, dConstraintTime, dConstraint, d2Constraint
