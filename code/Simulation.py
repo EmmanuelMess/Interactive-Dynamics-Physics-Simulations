@@ -31,6 +31,9 @@ class Simulation(Drawable):
                 print("i", particle.index, "x", particle.x, "v", particle.v)
 
         for particle in self.particles:
+            if particle.static:
+                continue
+
             particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
@@ -59,6 +62,9 @@ class Simulation(Drawable):
             print("f", lagrange(res.x))
 
         for particle in self.particles:
+            if particle.static:
+                continue
+
             particle.aConstraint = aConstraint[particle.index].copy()
             particle.a = particle.aApplied + particle.aConstraint
 

@@ -114,29 +114,27 @@ def case5():
     Distance constraints multi particles
     """
     particles: List[Particle] = [
-        Particle(0, np.array([0, 0], dtype=np.float64)),
+        Particle(0, np.array([0, 0], dtype=np.float64), static=True),
         Particle(1, np.array([25, -25], dtype=np.float64)),
         Particle(2, np.array([50, 0], dtype=np.float64)),
         Particle(3, np.array([75, -25], dtype=np.float64)),
         Particle(4, np.array([100, 0], dtype=np.float64)),
         Particle(5, np.array([125, -25], dtype=np.float64)),
-        Particle(6, np.array([150, 0], dtype=np.float64)),
+        Particle(6, np.array([150, 0], dtype=np.float64), static=True),
     ]
 
     constraints: List[Constraint] = [
-        CircleConstraint(0, particles[0], np.array([0, 0], dtype=np.float64), np.float64(0)),
-        CircleConstraint(1, particles[6], np.array([150, 0], dtype=np.float64), np.float64(0)),
-        DistanceConstraint(2, particles[0], particles[1], np.float64(50)),
-        DistanceConstraint(3, particles[0], particles[2], np.float64(50)),
-        DistanceConstraint(4, particles[1], particles[2], np.float64(50)),
-        DistanceConstraint(5, particles[1], particles[3], np.float64(50)),
-        DistanceConstraint(6, particles[2], particles[3], np.float64(50)),
-        DistanceConstraint(7, particles[2], particles[4], np.float64(50)),
-        DistanceConstraint(8, particles[3], particles[4], np.float64(50)),
-        DistanceConstraint(9, particles[3], particles[5], np.float64(50)),
-        DistanceConstraint(10, particles[4], particles[5], np.float64(50)),
-        DistanceConstraint(11, particles[4], particles[6], np.float64(50)),
-        DistanceConstraint(12, particles[5], particles[6], np.float64(50)),
+        DistanceConstraint(0, particles[0], particles[1], np.float64(50)),
+        DistanceConstraint(1, particles[0], particles[2], np.float64(50)),
+        DistanceConstraint(2, particles[1], particles[2], np.float64(50)),
+        DistanceConstraint(3, particles[1], particles[3], np.float64(50)),
+        DistanceConstraint(4, particles[2], particles[3], np.float64(50)),
+        DistanceConstraint(5, particles[2], particles[4], np.float64(50)),
+        DistanceConstraint(6, particles[3], particles[4], np.float64(50)),
+        DistanceConstraint(7, particles[3], particles[5], np.float64(50)),
+        DistanceConstraint(8, particles[4], particles[5], np.float64(50)),
+        DistanceConstraint(9, particles[4], particles[6], np.float64(50)),
+        DistanceConstraint(10, particles[5], particles[6], np.float64(50)),
     ]
 
     def force(t: np.float64) -> np.ndarray:
