@@ -3,6 +3,7 @@ from typing import List
 import numba
 import numpy as np
 
+from IndexerIterator import IndexerIterator
 from Particle import Particle
 from constraints.Constraint import Constraint
 
@@ -20,7 +21,7 @@ class SimulationFunctions:
         return ((J @ W @ J.T) * l.T + dJ @ dq + J @ W @ Q + ks * C + kd * dC).reshape((-1,))
 
     @staticmethod
-    def matrices(particles: List[Particle], constraints: List[Constraint], weight: np.float64 = 1):
+    def matrices(particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint], weight: np.float64 = 1):
         d = 2
         n = len(particles)
         m = len(constraints)

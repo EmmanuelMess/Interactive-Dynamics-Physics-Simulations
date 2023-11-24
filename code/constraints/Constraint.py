@@ -6,16 +6,16 @@ import jax.numpy as jnp
 
 import numpy as np
 
+from IndexedElement import IndexedElement
 from Particle import Particle
 from drawers.Drawable import Drawable
 
 
-class Constraint(ABC, Drawable):
+class Constraint(ABC, Drawable, IndexedElement):
     particles: List[Particle]
-    index: int
 
     @abstractmethod
-    def __init__(self, index: int, particles: List[Particle],
+    def __init__(self, particles: List[Particle],
                  constraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64],
                  dConstraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64],
                  dConstraint: Callable[[jnp.float64, jnp.ndarray, dict], jnp.ndarray],
@@ -26,8 +26,11 @@ class Constraint(ABC, Drawable):
         For the rest of the parameters pass the result from Constraint.computeDerivatives
         """
         super().__init__()
-        self.index, self.particles = index, particles
-        self.constraintTime, self.dConstraintTime, self.dConstraint, self.d2Constraint = constraintTime, dConstraintTime, dConstraint, d2Constraint
+        self.particles = particles
+        self.constraintTime = constraintTime
+        self.dConstraintTime = dConstraintTime
+        self.dConstraint = dConstraint
+        self.d2Constraint = d2Constraint
 
     @abstractmethod
     def getArgs(self) -> dict:

@@ -9,12 +9,12 @@ from drawers.Drawer import Drawer
 class CircleConstraint(Constraint):
     radius: np.float64
 
-    def __init__(self, index: int, particle: Particle, center: np.ndarray, radius: np.float64):
-        super().__init__(index, [particle], CircleConstraintFunctions().constraintTimeOptimized,
+    def __init__(self, particle: Particle, center: np.ndarray, radius: np.float64):
+        super().__init__([particle], CircleConstraintFunctions().constraintTimeOptimized,
                          CircleConstraintFunctions().dConstraintTime, CircleConstraintFunctions().dConstraint,
                          CircleConstraintFunctions().d2Constraint)
-        self.center, self.radius = center, radius
-        self.drawer = None
+        self.center = center
+        self.radius = radius
 
     def initDrawer(self):
         from drawers.CircleConstraintDrawer import CircleConstraintDrawer

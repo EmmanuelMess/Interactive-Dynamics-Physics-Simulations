@@ -1,11 +1,10 @@
 import numpy as np
 
+from IndexedElement import IndexedElement
 from drawers.Drawable import Drawable
-from drawers.Drawer import Drawer
 
 
-class Particle(Drawable):
-    index: int
+class Particle(Drawable, IndexedElement):
     x: np.ndarray
     v: np.ndarray
     a: np.ndarray
@@ -13,11 +12,14 @@ class Particle(Drawable):
     aConstraint: np.ndarray
     static: bool
 
-    def __init__(self, i: int, x: np.ndarray, static: bool = False):
+    def __init__(self, x: np.ndarray, static: bool = False):
         super().__init__()
-        self.index, self.x, self.static = i, x, static
-        self.v, self.a, self.aApplied, self.aConstraint = np.zeros_like(x), np.zeros_like(x), np.zeros_like(x), np.zeros_like(x)
-        self.drawer = None
+        self.x = x
+        self.static = static
+        self.v = np.zeros_like(x)
+        self.a = np.zeros_like(x)
+        self.aApplied = np.zeros_like(x)
+        self.aConstraint = np.zeros_like(x)
 
     def initDrawer(self):
         from drawers.ParticleDrawer import ParticleDrawer # Prevent circular dependency

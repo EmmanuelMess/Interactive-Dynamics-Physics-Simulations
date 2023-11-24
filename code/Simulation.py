@@ -4,6 +4,7 @@ from typing import List, Callable
 import numpy as np
 from scipy.optimize import root
 
+from IndexerIterator import IndexerIterator
 from SimulationFunctions import SimulationFunctions
 from constraints.Constraint import Constraint
 from Particle import Particle
@@ -11,10 +12,14 @@ from drawers.Drawable import Drawable
 
 
 class Simulation(Drawable):
-    def __init__(self, particles: List[Particle], constraints: List[Constraint], timestep: np.float64,
+    def __init__(self, particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint], timestep: np.float64,
                  force: Callable[[np.float64], np.ndarray], printData: bool = False):
         super().__init__()
-        self.particles, self.constraints, self.timestep, self.force, self.printData = particles, constraints, timestep, force, printData
+        self.particles = particles
+        self.constraints = constraints
+        self.timestep = timestep
+        self.force = force
+        self.printData = printData
         self.updateTiming = 0
         self.t = np.float64(0)
         self.error = np.float64(0)
