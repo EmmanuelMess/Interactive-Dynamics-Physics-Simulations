@@ -17,10 +17,12 @@ class ParticleDrawer(Drawer):
         self.label = self.font.render(f"{self.particle.index}", True, (0, 0, 0))
 
     def draw(self, surface: pygame.Surface, origin: np.ndarray):
-        c = 100
+        c = 10
         p = origin + self.particle.x
-        a = p + self.particle.a * c
-        pygame.draw.line(surface, (255, 0, 0), p, a)
+        aApplied = p + self.particle.aApplied * c
+        aConstraint = p + self.particle.aConstraint * c
+        pygame.draw.line(surface, (0, 255, 0), p, aApplied)
+        pygame.draw.line(surface, (255, 0, 0), p, aConstraint)
         pygame.draw.circle(surface, (0, 0, 255), p, self.radius)
         surface.blit(self.label, p + np.array([self.radius*0.5, self.radius*0.5]))
 

@@ -1,3 +1,5 @@
+from itertools import count
+
 import numpy as np
 from typing import List
 
@@ -165,6 +167,90 @@ def case6():
     return particles, constraints, force
 
 
+def case7():
+    """
+    Distance constraints in a grid for a lot of particles
+    """
+    CONSTRAINT_DISTANCE = np.float64(100)
+    DISTANCE = 50
+    EXTERNAL_GRID_WIDTH = 4
+    INTERNAL_GRID_WIDTH = EXTERNAL_GRID_WIDTH-1
+
+    externalGrid = range(0, DISTANCE*EXTERNAL_GRID_WIDTH, DISTANCE)
+    internalGrid = range(DISTANCE//2, DISTANCE*INTERNAL_GRID_WIDTH, DISTANCE)
+    positionsGridA = [np.array([x, y], dtype=np.float64) for x in externalGrid for y in externalGrid]
+    positionsGridB = [np.array([x, y], dtype=np.float64) for x in internalGrid for y in internalGrid]
+
+    particles: List[Particle] = []
+
+    for i, xy in enumerate(list(positionsGridA)+list(positionsGridB)):
+        particles.append(Particle(i, np.array(xy, dtype=np.float64)))
+
+    constraints: List[Constraint] = []
+
+    M = len(positionsGridA)
+    K = EXTERNAL_GRID_WIDTH
+    N = INTERNAL_GRID_WIDTH
+
+    index = 0
+    for i in range(len(positionsGridB)):
+        constraints.append(DistanceConstraint(index, particles[i+i//N], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(index+1, particles[i+i//N+1], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(index+2, particles[i+i//N+K], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(index+3, particles[i+i//N+K+1], particles[i+M], CONSTRAINT_DISTANCE))
+        index += 4
+
+    def force(t: np.float64) -> np.ndarray:
+        return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
+
+    return particles, constraints, force
+
+
+def case8():
+    """
+    Distance constraints in a grid for a lot of particles
+    """
+    DISTANCE = 50
+    CONSTRAINT_DISTANCE = np.float64(np.sqrt(DISTANCE**2+DISTANCE**2)/2)
+    EXTERNAL_GRID_WIDTH = 4
+    INTERNAL_GRID_WIDTH = EXTERNAL_GRID_WIDTH-1
+
+    externalGrid = range(0, DISTANCE*EXTERNAL_GRID_WIDTH, DISTANCE)
+    internalGrid = range(DISTANCE//2, DISTANCE*INTERNAL_GRID_WIDTH, DISTANCE)
+    positionsGridA = [np.array([x, y], dtype=np.float64) for x in externalGrid for y in externalGrid]
+    positionsGridB = [np.array([x, y], dtype=np.float64) for x in internalGrid for y in internalGrid]
+
+    particles: List[Particle] = []
+
+    for i, xy in enumerate(list(positionsGridA)+list(positionsGridB)):
+        particles.append(Particle(i, np.array(xy, dtype=np.float64)))
+
+    constraints: List[Constraint] = []
+
+    M = len(positionsGridA)
+    K = EXTERNAL_GRID_WIDTH
+    N = INTERNAL_GRID_WIDTH
+
+    index = 0
+    for i in range(len(positionsGridB)):
+        constraints.append(DistanceConstraint(index, particles[i+i//N], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(index+1, particles[i+i//N+1], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(index+2, particles[i+i//N+K], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(index+3, particles[i+i//N+K+1], particles[i+M], CONSTRAINT_DISTANCE))
+
+        constraints.append(DistanceConstraint(index+4, particles[i+i//N], particles[i+i//N+1], DISTANCE))
+        constraints.append(DistanceConstraint(index+5, particles[i+i//N+1], particles[i+i//N+K+1], DISTANCE))
+        constraints.append(DistanceConstraint(index+6, particles[i+i//N+K+1], particles[i+i//N+K], DISTANCE))
+        constraints.append(DistanceConstraint(index+7, particles[i+i//N+K], particles[i+i//N], DISTANCE))
+
+        index += 8
+
+    def force(t: np.float64) -> np.ndarray:
+        return np.array([[10*np.abs(np.sin(1000*t)), -10*np.abs(np.sin(1000*t))]] + [[0, 0] for i in range(len(particles)-1)], dtype=np.float64)
+
+    return particles, constraints, force
+
+
 def run(simulation: Simulation, ui: UI):
     running = True
     while running:
@@ -186,7 +272,7 @@ def main():
     print("Done")
 
     timestep = (np.float64(0.0001))
-    particles, constraints, force = case5()
+    particles, constraints, force = case8()
     simulation = Simulation(particles, constraints, timestep, force, False)
     ui = UI([simulation]+particles+constraints, timestep)
     run(simulation, ui)
