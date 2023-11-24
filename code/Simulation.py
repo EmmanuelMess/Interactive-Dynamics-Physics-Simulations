@@ -1,3 +1,4 @@
+from timeit import default_timer as timer
 from typing import List, Callable
 
 import numpy as np
@@ -14,6 +15,7 @@ class Simulation(Drawable):
                  force: Callable[[np.float64], np.ndarray], printData: bool = False):
         super().__init__()
         self.particles, self.constraints, self.timestep, self.force, self.printData = particles, constraints, timestep, force, printData
+        self.updateTiming = 0
         self.t = np.float64(0)
         self.error = np.float64(0)
 
@@ -22,6 +24,8 @@ class Simulation(Drawable):
         self.setDrawer(SimulationDrawer(self))
 
     def update(self):
+        start = timer()
+
         if self.printData:
             print("----------")
             print("t", self.t)
@@ -74,6 +78,9 @@ class Simulation(Drawable):
             particle.x = SimulationFunctions.x(particle.x, particle.v, particle.a, self.t)
             particle.v = SimulationFunctions.dx(particle.x, particle.v, particle.a, self.t)
 
+        end = timer()
+
+        self.updateTiming = end - start
         self.t += self.timestep
 
     def getRunningTime(self):

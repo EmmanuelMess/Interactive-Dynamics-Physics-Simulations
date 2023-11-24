@@ -14,4 +14,5 @@ class SimulationDrawer(Drawer):
 
     def getText(self) -> str:
         return (f"t {self.simulation.getRunningTime()}s\n"
-                f"error {self.simulation.error}")
+                f"error {self.simulation.error}\n"
+                f"ΔT {self.simulation.updateTiming*1000}ms")
