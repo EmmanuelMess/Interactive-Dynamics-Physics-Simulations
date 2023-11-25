@@ -27,7 +27,7 @@ def run(simulation: Simulation, ui: UI):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--case', default=1)
+    parser.add_argument('-c', '--case', required=True)
     args = parser.parse_args()
 
     print("Loading derivatives...", end="")
