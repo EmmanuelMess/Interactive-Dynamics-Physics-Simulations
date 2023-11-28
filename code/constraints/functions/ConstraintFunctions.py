@@ -2,10 +2,7 @@ from typing import Callable
 
 import jax
 import jax.numpy as jnp
-from jax import jacfwd, grad
-
-from Singleton import Singleton
-
+from jax import jacfwd, grad, value_and_grad
 
 class ConstraintFunctions:
     @staticmethod
@@ -16,8 +13,9 @@ class ConstraintFunctions:
         """
         constraintTime = jax.jit(constraintTime)
         dConstraintTime = jax.jit(grad(constraintTime, argnums=0))
+        constraintAndDerivativeOfTime = jax.jit(value_and_grad(constraintTime, argnums=0))
         dConstraint = jacfwd(constraintTime, argnums=1)
         dConstraint = jax.jit(dConstraint)
         d2Constraint = jacfwd(dConstraintTime, argnums=1)
         d2Constraint = jax.jit(d2Constraint)
-        return constraintTime, dConstraintTime, dConstraint, d2Constraint
+        return constraintAndDerivativeOfTime, dConstraint, d2Constraint

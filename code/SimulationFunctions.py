@@ -44,10 +44,9 @@ class SimulationFunctions:
         Q = Q.reshape((n * d, 1))
 
         for constraint in constraints:
-            C[constraint.index] += constraint.C()
-            dC[constraint.index] += constraint.dC()
-            JForConstraint = constraint.J()
-            dJForConstraint = constraint.dJ()
+            CForConstraint, dCForConstraint, JForConstraint, dJForConstraint = constraint.get()
+            C[constraint.index] += CForConstraint
+            dC[constraint.index] += dCForConstraint
             for j, particle in enumerate(constraint.particles):
                 J[constraint.index, particle.index] += JForConstraint[j]
                 dJ[constraint.index, particle.index] += dJForConstraint[j]

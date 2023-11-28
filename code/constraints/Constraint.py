@@ -16,8 +16,7 @@ class Constraint(ABC, Drawable, IndexedElement):
 
     @abstractmethod
     def __init__(self, particles: List[Particle],
-                 constraintTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64],
-                 dConstraintTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64],
+                 constraintAndDerivativeOfTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], Tuple[jnp.float64, jnp.float64]],
                  dConstraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray],
                  d2Constraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray]):
         """
@@ -27,8 +26,7 @@ class Constraint(ABC, Drawable, IndexedElement):
         """
         super().__init__()
         self.particles = particles
-        self.constraintTime = constraintTime
-        self.dConstraintTime = dConstraintTime
+        self.constraintAndDerivativeOfTime = constraintAndDerivativeOfTime
         self.dConstraint = dConstraint
         self.d2Constraint = d2Constraint
 
@@ -48,19 +46,10 @@ class Constraint(ABC, Drawable, IndexedElement):
 
         return jnp.array(positionMatrix), jnp.array(velocityMatrix), jnp.array(accelerationMatrix)
 
-    def C(self) -> np.float64:
+    def get(self) -> Tuple[jnp.float64, jnp.float64, jnp.ndarray, jnp.ndarray]:
         x, v, a = self.getFullParticleMatrices()
-        return self.constraintTime(jnp.float64(0), x, v, a, self.getArgs())
-
-    def dC(self) -> np.float64:
-        x, v, a = self.getFullParticleMatrices()
-        return self.dConstraintTime(jnp.float64(0), x, v, a, self.getArgs())
-
-    def J(self) -> np.array:
-        x, v, a = self.getFullParticleMatrices()
-        return self.dConstraint(jnp.float64(0), x, v, a, self.getArgs())
-
-    def dJ(self) -> np.array:
-        x, v, a = self.getFullParticleMatrices()
-        return self.d2Constraint(jnp.float64(0), x, v, a, self.getArgs())
-
+        args = self.getArgs()
+        C, dC = self.constraintAndDerivativeOfTime(jnp.float64(0), x, v, a, args)
+        J = self.dConstraint(jnp.float64(0), x, v, a, args)
+        dJ = self.d2Constraint(jnp.float64(0), x, v, a, args)
+        return C, dC, J, dJ

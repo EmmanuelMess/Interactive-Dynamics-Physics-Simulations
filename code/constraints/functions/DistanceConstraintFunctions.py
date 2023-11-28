@@ -26,5 +26,5 @@ class DistanceConstraintFunctions:
             jnp.array([positionApproximationA(t), positionApproximationB(t)]), params)  # TODO fix this array() call
 
     def __init__(self):
-        self.constraintTimeOptimized, self.dConstraintTime, self.dConstraint, self.d2Constraint =\
+        self.constraintAndDerivativeOfTime, self.dConstraint, self.d2Constraint =\
             ConstraintFunctions.computeDerivatives(DistanceConstraintFunctions.constraintTime)

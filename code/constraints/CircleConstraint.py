@@ -10,9 +10,8 @@ class CircleConstraint(Constraint):
     radius: np.float64
 
     def __init__(self, particle: Particle, center: np.ndarray, radius: np.float64):
-        super().__init__([particle], CircleConstraintFunctions().constraintTimeOptimized,
-                         CircleConstraintFunctions().dConstraintTime, CircleConstraintFunctions().dConstraint,
-                         CircleConstraintFunctions().d2Constraint)
+        super().__init__([particle], CircleConstraintFunctions().constraintAndDerivativeOfTime,
+                         CircleConstraintFunctions().dConstraint, CircleConstraintFunctions().d2Constraint)
         self.center = center
         self.radius = radius
 
