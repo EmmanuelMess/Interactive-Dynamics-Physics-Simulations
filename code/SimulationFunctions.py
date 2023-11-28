@@ -47,9 +47,14 @@ class SimulationFunctions:
             CForConstraint, dCForConstraint, JForConstraint, dJForConstraint = constraint.get()
             C[constraint.index] += CForConstraint
             dC[constraint.index] += dCForConstraint
-            for j, particle in enumerate(constraint.particles):
-                J[constraint.index, particle.index] += JForConstraint[j]
-                dJ[constraint.index, particle.index] += dJForConstraint[j]
+
+            # HACK advanced numpy indexing is much faster than the equivalent loop, as jax copies the array values
+            # before returning them when using normal indexing
+            indicesConstraint = [constraint.index for _ in constraint.particles]
+            indicesParticle = [particle.index for particle in constraint.particles]
+
+            J[indicesConstraint, indicesParticle] += JForConstraint
+            dJ[indicesConstraint, indicesParticle] += dJForConstraint
 
         J = J.reshape((m, n * d))
         dJ = dJ.reshape((m, n * d))

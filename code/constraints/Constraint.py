@@ -6,6 +6,7 @@ import jax.numpy as jnp
 
 import numpy as np
 
+import PositionApproximation
 from IndexedElement import IndexedElement
 from Particle import Particle
 from drawers.Drawable import Drawable
@@ -49,7 +50,7 @@ class Constraint(ABC, Drawable, IndexedElement):
     def get(self) -> Tuple[jnp.float64, jnp.float64, jnp.ndarray, jnp.ndarray]:
         x, v, a = self.getFullParticleMatrices()
         args = self.getArgs()
-        C, dC = self.constraintAndDerivativeOfTime(jnp.float64(0), x, v, a, args)
-        J = self.dConstraint(jnp.float64(0), x, v, a, args)
-        dJ = self.d2Constraint(jnp.float64(0), x, v, a, args)
+        C, dC = self.constraintAndDerivativeOfTime(PositionApproximation.ZERO_TIME, x, v, a, args)
+        J = self.dConstraint(PositionApproximation.ZERO_TIME, x, v, a, args)
+        dJ = self.d2Constraint(PositionApproximation.ZERO_TIME, x, v, a, args)
         return C, dC, J, dJ
