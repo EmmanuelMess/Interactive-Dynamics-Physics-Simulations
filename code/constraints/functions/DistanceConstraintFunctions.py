@@ -19,7 +19,7 @@ class DistanceConstraintFunctions:
 
     @staticmethod
     @jax.jit
-    def constraintTime(t: jnp.float64, x: jnp.ndarray, v: jnp.ndarray, a: jnp.ndarray, params: dict):
+    def constraintOfTime(t: jnp.float64, x: jnp.ndarray, v: jnp.ndarray, a: jnp.ndarray, params: dict):
         positionApproximationA = constructPositionFunction(x[0], v[0], a[0])
         positionApproximationB = constructPositionFunction(x[1], v[1], a[1])
         return DistanceConstraintFunctions.constraint(
@@ -27,4 +27,4 @@ class DistanceConstraintFunctions:
 
     def __init__(self):
         self.constraintAndDerivativeOfTime, self.dConstraint, self.d2Constraint =\
-            ConstraintFunctions.computeDerivatives(DistanceConstraintFunctions.constraintTime)
+            ConstraintFunctions.computeDerivatives(DistanceConstraintFunctions.constraintOfTime)
