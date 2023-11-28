@@ -18,9 +18,8 @@ class CircleConstraintFunctions:
 
     @staticmethod
     @jax.jit
-    def constraintTime(t: jnp.float64, x: jnp.ndarray, params: dict) -> jnp.float64:
-        p = x[0]
-        positionApproximation = constructPositionFunction(p[0], p[1], p[2])
+    def constraintTime(t: jnp.float64, x: jnp.ndarray, v: jnp.ndarray, a: jnp.ndarray, params: dict) -> jnp.float64:
+        positionApproximation = constructPositionFunction(x[0], v[0], a[0])
         return CircleConstraintFunctions.constraint(jnp.array([positionApproximation(t)]), params)  # TODO fix this array() call
 
     def __init__(self):

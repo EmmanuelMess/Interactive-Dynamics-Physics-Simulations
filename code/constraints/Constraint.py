@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from typing import List, Callable
+from typing import List, Callable, Tuple
 
 import jax.numpy as jnp
 
@@ -16,10 +16,10 @@ class Constraint(ABC, Drawable, IndexedElement):
 
     @abstractmethod
     def __init__(self, particles: List[Particle],
-                 constraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64],
-                 dConstraintTime: Callable[[jnp.float64, jnp.ndarray, dict], jnp.float64],
-                 dConstraint: Callable[[jnp.float64, jnp.ndarray, dict], jnp.ndarray],
-                 d2Constraint: Callable[[jnp.float64, jnp.ndarray, dict], jnp.ndarray]):
+                 constraintTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64],
+                 dConstraintTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64],
+                 dConstraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray],
+                 d2Constraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray]):
         """
         :param index: Index of this particle
         :param particles: All particles that are affected by this constraint
@@ -36,27 +36,31 @@ class Constraint(ABC, Drawable, IndexedElement):
     def getArgs(self) -> dict:
         pass
 
-    def getFullParticleMatrix(self) -> jnp.ndarray:
-        particleMatrix = np.empty((len(self.particles), 3, 2), dtype=np.float64)
+    def getFullParticleMatrices(self) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+        positionMatrix = np.empty((len(self.particles), 2), dtype=np.float64)
+        velocityMatrix = np.empty((len(self.particles), 2), dtype=np.float64)
+        accelerationMatrix = np.empty((len(self.particles), 2), dtype=np.float64)
 
         for i, particle in enumerate(self.particles):
-            particleMatrix[i, 0] = particle.x
-            particleMatrix[i, 1] = particle.v
-            particleMatrix[i, 2] = particle.a
+            positionMatrix[i] = particle.x
+            velocityMatrix[i] = particle.v
+            accelerationMatrix[i] = particle.a
 
-        return jnp.array(particleMatrix)
+        return jnp.array(positionMatrix), jnp.array(velocityMatrix), jnp.array(accelerationMatrix)
 
     def C(self) -> np.float64:
-        return self.constraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+        x, v, a = self.getFullParticleMatrices()
+        return self.constraintTime(jnp.float64(0), x, v, a, self.getArgs())
 
     def dC(self) -> np.float64:
-        return self.dConstraintTime(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
+        x, v, a = self.getFullParticleMatrices()
+        return self.dConstraintTime(jnp.float64(0), x, v, a, self.getArgs())
 
     def J(self) -> np.array:
-        constraintJacobian = self.dConstraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
-        return constraintJacobian
+        x, v, a = self.getFullParticleMatrices()
+        return self.dConstraint(jnp.float64(0), x, v, a, self.getArgs())
 
     def dJ(self) -> np.array:
-        constraintJacobian = self.d2Constraint(jnp.float64(0), self.getFullParticleMatrix(), self.getArgs())
-        return constraintJacobian
+        x, v, a = self.getFullParticleMatrices()
+        return self.d2Constraint(jnp.float64(0), x, v, a, self.getArgs())
 
