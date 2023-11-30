@@ -1,6 +1,6 @@
 from typing import Final
 
-from jax import config, jit
+from jax import config
 
 config.update("jax_enable_x64", True)
 
@@ -16,7 +16,6 @@ def constructPositionFunction(position: jnp.ndarray, velocity: jnp.ndarray, acce
     Construct a position function approximation using Taylor.
     """
 
-    @jit
     def f(t: jnp.ndarray):
         """
         This function simply satisfies:

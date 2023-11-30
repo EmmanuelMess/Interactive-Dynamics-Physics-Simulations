@@ -4,6 +4,8 @@ import numpy as np
 
 import pygame
 
+from scalene import scalene_profiler
+
 import Cases
 from Simulation import Simulation
 from UI import UI
@@ -39,6 +41,11 @@ def main():
     particles, constraints, force = Cases.CASES[args.case]()
     simulation = Simulation(particles, constraints, timestep, force, False)
     ui = UI([simulation]+particles+constraints, timestep)
+
+    # HACK First update will compile everything and is not representative for profiling
+    simulation.update()
+
+    scalene_profiler.start()
     run(simulation, ui)
 
 

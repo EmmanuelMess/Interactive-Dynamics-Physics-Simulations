@@ -45,7 +45,7 @@ class Constraint(ABC, Drawable, IndexedElement):
             velocityMatrix[i] = particle.v
             accelerationMatrix[i] = particle.a
 
-        return jnp.array(positionMatrix), jnp.array(velocityMatrix), jnp.array(accelerationMatrix)
+        return jnp.array(positionMatrix), jnp.array(velocityMatrix), jnp.array(accelerationMatrix) # TODO remove jnp.array calls
 
     def get(self) -> Tuple[jnp.float64, jnp.float64, jnp.ndarray, jnp.ndarray]:
         x, v, a = self.getFullParticleMatrices()

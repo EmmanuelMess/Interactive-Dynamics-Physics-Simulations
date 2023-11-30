@@ -10,12 +10,10 @@ from constraints.Constraint import Constraint
 
 class SimulationFunctions:
     @staticmethod
-    @numba.jit(nopython=True)
     def precompiledForceCalculation(J: np.ndarray, l: np.float64) -> np.ndarray:
         return (J.T @ l).reshape((-1, 2))
 
     @staticmethod
-    @numba.jit(nopython=True)
     def precompiledLagrange(dq: np.ndarray, Q: np.ndarray, W: np.ndarray, J: np.ndarray, dJ: np.ndarray, C: np.ndarray,
                             dC: np.ndarray, ks: np.float64, kd: np.float64, l: np.float64):
         return ((J @ W @ J.T) * l.T + dJ @ dq + J @ W @ Q + ks * C + kd * dC).reshape((-1,))
