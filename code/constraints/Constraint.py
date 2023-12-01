@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List, Callable, Tuple
 
 import jax.numpy as jnp
+import jax
 
 import numpy as np
 
@@ -35,17 +36,12 @@ class Constraint(ABC, Drawable, IndexedElement):
     def getArgs(self) -> dict:
         pass
 
-    def getFullParticleMatrices(self) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-        positionMatrix = np.empty((len(self.particles), 2), dtype=np.float64)
-        velocityMatrix = np.empty((len(self.particles), 2), dtype=np.float64)
-        accelerationMatrix = np.empty((len(self.particles), 2), dtype=np.float64)
+    def getFullParticleMatrices(self):
+        positionMatrix = jnp.array([particle.x for particle in self.particles])
+        velocityMatrix = jnp.array([particle.v for particle in self.particles])
+        accelerationMatrix = jnp.array([particle.a for particle in self.particles])
 
-        for i, particle in enumerate(self.particles):
-            positionMatrix[i] = particle.x
-            velocityMatrix[i] = particle.v
-            accelerationMatrix[i] = particle.a
-
-        return jnp.array(positionMatrix), jnp.array(velocityMatrix), jnp.array(accelerationMatrix) # TODO remove jnp.array calls
+        return positionMatrix, velocityMatrix, accelerationMatrix
 
     def get(self) -> Tuple[jnp.float64, jnp.float64, jnp.ndarray, jnp.ndarray]:
         x, v, a = self.getFullParticleMatrices()
