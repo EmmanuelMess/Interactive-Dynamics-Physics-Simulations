@@ -46,13 +46,14 @@ class Simulation(Drawable):
             particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
-        dq, Q, W, J, dJ, C, dC, lagrange = SimulationFunctions.matrices(self.particles, self.constraints)
+        lagrangeArgs, lagrange = SimulationFunctions.matrices(self.particles, self.constraints)
+        dq, Q, W, J, dJ, C, dC, _, _ = lagrangeArgs
 
-        res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm')
+        res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm', args=lagrangeArgs)
 
         aConstraint = SimulationFunctions.precompiledForceCalculation(J, res.x)
 
-        self.error = np.sqrt(np.sum(lagrange(res.x)**2))
+        self.error = np.sqrt(np.sum(lagrange(res.x, *lagrangeArgs)**2))
 
         if self.printData:
             print("dq", dq)
