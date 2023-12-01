@@ -30,6 +30,7 @@ def run(simulation: Simulation, ui: UI):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--case', required=True)
+    parser.add_argument('-p', '--profile', action='store_true')
     args = parser.parse_args()
 
     print("Loading derivatives...", end="")
@@ -45,7 +46,9 @@ def main():
     # HACK First update will compile everything and is not representative for profiling
     simulation.update()
 
-    scalene_profiler.start()
+    if args.profile:
+        scalene_profiler.start()
+
     run(simulation, ui)
 
 
