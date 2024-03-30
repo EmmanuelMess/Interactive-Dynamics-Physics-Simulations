@@ -8,7 +8,7 @@ from simulator.drawers.Drawable import Drawable
 
 
 class UI:
-    def __init__(self, drawables: List[Drawable], timestep: np.float64):
+    def __init__(self, drawables: List[Drawable], timestep: np.float64) -> None:
         self.drawables, self.timestep = drawables, timestep
         self.size = [500, 500]
         self.origin = np.array(self.size)/2
@@ -23,7 +23,7 @@ class UI:
         for drawable in self.drawables:
             drawable.initDrawer()
 
-    def showDrawables(self):
+    def showDrawables(self) -> None:
         allText = []
 
         for text in self.drawables:
@@ -33,7 +33,7 @@ class UI:
             label = self.font.render(string, 1, (0, 0, 0))
             self.screen.blit(label, (0, yPositionTextLine))
 
-    def update(self):
+    def update(self) -> None:
         self.screen.fill((255, 255, 255))
         for drawable in self.drawables:
             drawable.getDrawer().draw(self.screen, self.origin)

@@ -3,7 +3,7 @@ from typing import Final
 import numpy as np
 import pygame
 
-from Particle import Particle
+from simulator.Particle import Particle
 from simulator.drawers.Drawer import Drawer
 
 
@@ -11,12 +11,12 @@ class ParticleDrawer(Drawer):
     radius: Final[int] = 5
     fontSize: Final[int] = 10
 
-    def __init__(self, particle: Particle):
+    def __init__(self, particle: Particle) -> None:
         self.particle = particle
         self.font = pygame.font.SysFont("monospace", self.fontSize)
         self.label = self.font.render(f"{self.particle.index}", True, (0, 0, 0))
 
-    def draw(self, surface: pygame.Surface, origin: np.ndarray):
+    def draw(self, surface: pygame.Surface, origin: np.ndarray) -> None:
         c = 10
         p = origin + self.particle.x
         aApplied = p + self.particle.aApplied * c

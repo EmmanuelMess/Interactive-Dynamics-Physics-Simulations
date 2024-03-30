@@ -1,6 +1,6 @@
 import jax.numpy as jnp
 
-from simulator.common.Singleton import Singleton
+from simulator.Singleton import Singleton
 from simulator.PositionApproximation import constructPositionFunction
 from simulator.constraints.functions.ConstraintFunctions import ConstraintFunctions
 

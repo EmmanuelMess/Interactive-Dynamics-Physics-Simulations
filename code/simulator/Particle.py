@@ -12,7 +12,7 @@ class Particle(Drawable, IndexedElement):
     aConstraint: np.ndarray
     static: bool
 
-    def __init__(self, x: np.ndarray, static: bool = False):
+    def __init__(self, x: np.ndarray, static: bool = False) -> None:
         super().__init__()
         self.x = x
         self.static = static
@@ -21,6 +21,6 @@ class Particle(Drawable, IndexedElement):
         self.aApplied = np.zeros_like(x)
         self.aConstraint = np.zeros_like(x)
 
-    def initDrawer(self):
+    def initDrawer(self) -> None:
         from simulator.drawers.ParticleDrawer import ParticleDrawer  # Prevent circular dependency
         self.setDrawer(ParticleDrawer(self))

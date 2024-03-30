@@ -13,9 +13,9 @@ class DistanceConstraint(Constraint):
                          DistanceConstraintFunctions().dConstraint, DistanceConstraintFunctions().d2Constraint)
         self.distance = distance
 
-    def initDrawer(self):
+    def initDrawer(self) -> None:
         from simulator.drawers.DistanceConstraintDrawer import DistanceConstraintDrawer
-        self.setDrawer(DistanceConstraintDrawer(self))
+        super(DistanceConstraint, self).setDrawer(DistanceConstraintDrawer(self))
 
     def getArgs(self) -> dict:
         return {

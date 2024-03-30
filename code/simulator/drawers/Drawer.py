@@ -9,7 +9,7 @@ class Drawer(ABC):
     Allows something to be drawn on a surface
     """
     @abstractmethod
-    def draw(self, surface: pygame.Surface, origin: np.ndarray):
+    def draw(self, surface: pygame.Surface, origin: np.ndarray) -> None:
         pass
 
     @abstractmethod

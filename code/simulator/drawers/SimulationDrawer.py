@@ -9,7 +9,7 @@ class SimulationDrawer(Drawer):
     def __init__(self, simulation: Simulation):
         self.simulation = simulation
 
-    def draw(self, surface: pygame.Surface, origin: np.ndarray):
+    def draw(self, surface: pygame.Surface, origin: np.ndarray) -> None:
         pass
 
     def getText(self) -> str:

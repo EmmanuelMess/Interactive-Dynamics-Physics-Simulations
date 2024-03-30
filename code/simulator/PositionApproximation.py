@@ -18,13 +18,14 @@ def constructPositionFunction(position: jnp.ndarray, velocity: jnp.ndarray, acce
     Construct a position function approximation using Taylor.
     """
 
-    def f(t: jnp.ndarray):
+    def f(t: jnp.ndarray) -> jnp.ndarray:
         """
         This function simply satisfies:
             * f(0) = position
             * f'(0) = velocity
             * f''(0) = acceleration
         """
+        #
         return position + velocity * t + (1/2) * acceleration * t ** 2
 
     return f

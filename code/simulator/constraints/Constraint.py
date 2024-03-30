@@ -7,9 +7,10 @@ import jax.numpy as jnp
 from simulator import PositionApproximation
 from simulator.IndexedElement import IndexedElement
 from simulator.Particle import Particle
+from simulator.drawers.Drawable import Drawable
 
 
-class Constraint(ABC, IndexedElement):
+class Constraint(ABC, Drawable, IndexedElement):
     particles: List[Particle]
 
     @abstractmethod

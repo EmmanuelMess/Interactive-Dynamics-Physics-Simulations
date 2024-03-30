@@ -19,7 +19,7 @@ class SimulationFunctions:
 
     @staticmethod
     @numba.njit
-    def precompiledLagrange(l: np.float64, f: np.ndarray, g: np.ndarray) -> np.ndarray:
+    def precompiledLagrange(l: np.ndarray, f: np.ndarray, g: np.ndarray) -> np.ndarray:
         # pylint: disable=too-many-arguments
         """
         Minimization to calculate correct forces as lagrangian multipliers (see mathematical model)
@@ -30,10 +30,9 @@ class SimulationFunctions:
     def matrices(particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
                  weight: np.float64 = np.float64(1))\
             -> Tuple[
-                Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,
-                      np.float64, np.float64],
-                Callable[[np.float64, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,
-                          np.ndarray, np.float64, np.float64], np.ndarray]
+                Tuple[np.ndarray, np.ndarray],
+                Callable[[np.ndarray, np.ndarray, np.ndarray], np.ndarray],
+                np.ndarray
             ]:  # pylint: disable=too-many-locals
         """
         Compute the matrices to run the lagrangian multipliers (see mathematical model)
@@ -82,9 +81,15 @@ class SimulationFunctions:
         return lagrangeArgs, SimulationFunctions.precompiledLagrange, J
 
     @staticmethod
-    def x(p, v, a, t):
+    def x(p: np.ndarray, v: np.ndarray, a: np.ndarray, t: np.float64) -> np.ndarray:
+        """
+        Position Taylor approximation from position, velocity, acceleration and time
+        """
         return p + v * t + (1/2) * a * t**2
 
     @staticmethod
-    def dx(p, v, a, t):
+    def dx(p: np.ndarray, v: np.ndarray, a: np.ndarray, t: np.float64) -> np.ndarray:  # pylint: disable=unused-argument
+        """
+        Derivative of Taylor approximation from position, velocity, acceleration and time
+        """
         return v + a * t

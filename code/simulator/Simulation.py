@@ -2,7 +2,7 @@ from timeit import default_timer as timer
 from typing import Callable
 
 import numpy as np
-from scipy.optimize import root
+from scipy.optimize import root  # type: ignore
 
 from simulator.IndexerIterator import IndexerIterator
 from simulator.SimulationFunctions import SimulationFunctions
@@ -24,13 +24,14 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         self.timestep = timestep
         self.force = force
         self.printData = printData
-        self.updateTiming = 0
+        self.updateTiming: float = 0
         self.t = np.float64(0)
         self.error = np.float64(0)
 
-    def initDrawer(self):
-        from drawers.SimulationDrawer import SimulationDrawer
-        self.setDrawer(SimulationDrawer(self))
+    def initDrawer(self) -> None:
+        from simulator.drawers.SimulationDrawer import SimulationDrawer
+
+        super(Simulation, self).setDrawer(SimulationDrawer(self))
 
     def update(self) -> None:
         """
@@ -70,7 +71,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             print("J W J.T", g)
 
             print("l", res.x)
-            print("f", lagrange(res.x))
+            print("f", lagrange(res.x, f, g))
 
         for particle in self.particles:
             if particle.static:
@@ -90,5 +91,5 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         self.updateTiming = end - start
         self.t += self.timestep
 
-    def getRunningTime(self):  # pylint: disable=missing-function-docstring
+    def getRunningTime(self) -> np.float64:  # pylint: disable=missing-function-docstring
         return self.t

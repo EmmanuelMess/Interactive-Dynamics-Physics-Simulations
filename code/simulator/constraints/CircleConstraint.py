@@ -14,9 +14,9 @@ class CircleConstraint(Constraint):
         self.center = center
         self.radius = radius
 
-    def initDrawer(self):
+    def initDrawer(self) -> None:
         from simulator.drawers.CircleConstraintDrawer import CircleConstraintDrawer
-        self.setDrawer(CircleConstraintDrawer(self))
+        super(CircleConstraint, self).setDrawer(CircleConstraintDrawer(self))
 
     def getArgs(self) -> dict:
         return {
