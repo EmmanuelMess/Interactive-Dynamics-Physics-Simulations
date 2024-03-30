@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from drawers.Drawer import Drawer
+from simulator.drawers.Drawer import Drawer
 
 
 class Drawable:

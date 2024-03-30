@@ -1,5 +1,8 @@
+setuptools
+lark
+typing-extensions
+scipy
 numpy
-pygame
 jax
 numba
-scalene
+pygame

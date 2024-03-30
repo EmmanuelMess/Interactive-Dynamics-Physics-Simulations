@@ -2,7 +2,7 @@ import numpy as np
 import pygame
 
 from Simulation import Simulation
-from drawers.Drawer import Drawer
+from simulator.drawers.Drawer import Drawer
 
 
 class SimulationDrawer(Drawer):

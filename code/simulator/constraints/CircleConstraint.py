@@ -1,9 +1,8 @@
 import numpy as np
 
-from Particle import Particle
-from constraints.Constraint import Constraint
-from constraints.functions.CircleConstraintFunctions import CircleConstraintFunctions
-from drawers.Drawer import Drawer
+from simulator.Particle import Particle
+from simulator.constraints.Constraint import Constraint
+from simulator.constraints.functions.CircleConstraintFunctions import CircleConstraintFunctions
 
 
 class CircleConstraint(Constraint):

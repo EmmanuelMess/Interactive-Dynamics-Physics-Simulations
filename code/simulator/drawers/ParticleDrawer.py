@@ -4,7 +4,7 @@ import numpy as np
 import pygame
 
 from Particle import Particle
-from drawers.Drawer import Drawer
+from simulator.drawers.Drawer import Drawer
 
 
 class ParticleDrawer(Drawer):

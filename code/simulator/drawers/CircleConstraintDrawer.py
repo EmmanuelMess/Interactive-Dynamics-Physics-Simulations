@@ -2,7 +2,7 @@ import numpy as np
 import pygame
 
 from constraints.CircleConstraint import CircleConstraint
-from drawers.Drawer import Drawer
+from simulator.drawers.Drawer import Drawer
 
 
 class CircleConstraintDrawer(Drawer):

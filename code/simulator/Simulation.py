@@ -4,11 +4,11 @@ from typing import List, Callable
 import numpy as np
 from scipy.optimize import root
 
-from IndexerIterator import IndexerIterator
-from SimulationFunctions import SimulationFunctions
-from constraints.Constraint import Constraint
-from Particle import Particle
-from drawers.Drawable import Drawable
+from simulator.IndexerIterator import IndexerIterator
+from simulator.SimulationFunctions import SimulationFunctions
+from simulator.constraints.Constraint import Constraint
+from simulator.Particle import Particle
+from simulator.drawers.Drawable import Drawable
 
 
 class Simulation(Drawable):

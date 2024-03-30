@@ -4,13 +4,11 @@ import numpy as np
 
 import pygame
 
-from scalene import scalene_profiler
-
-import Cases
-from Simulation import Simulation
-from UI import UI
-from constraints.functions.CircleConstraintFunctions import CircleConstraintFunctions
-from constraints.functions.DistanceConstraintFunctions import DistanceConstraintFunctions
+from simulator import Cases
+from simulator.Simulation import Simulation
+from simulator.UI import UI
+from simulator.constraints.functions.CircleConstraintFunctions import CircleConstraintFunctions
+from simulator.constraints.functions.DistanceConstraintFunctions import DistanceConstraintFunctions
 
 
 def run(simulation: Simulation, ui: UI):
@@ -47,6 +45,8 @@ def main():
     simulation.update()
 
     if args.profile:
+        from scalene import scalene_profiler
+
         scalene_profiler.start()
 
     run(simulation, ui)

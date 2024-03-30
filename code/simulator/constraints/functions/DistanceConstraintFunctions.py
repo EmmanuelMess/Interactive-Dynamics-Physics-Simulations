@@ -1,10 +1,9 @@
-from PositionApproximation import constructPositionFunction
-from Singleton import Singleton
+from simulator.PositionApproximation import constructPositionFunction
+from simulator.Singleton import Singleton
 
 import jax.numpy as jnp
-import jax
 
-from constraints.functions.ConstraintFunctions import ConstraintFunctions
+from simulator.constraints.functions.ConstraintFunctions import ConstraintFunctions
 
 
 class DistanceConstraintFunctions:

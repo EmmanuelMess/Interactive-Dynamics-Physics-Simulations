@@ -7,10 +7,10 @@ import jax
 
 import numpy as np
 
-import PositionApproximation
-from IndexedElement import IndexedElement
-from Particle import Particle
-from drawers.Drawable import Drawable
+from simulator import PositionApproximation
+from simulator.IndexedElement import IndexedElement
+from simulator.Particle import Particle
+from simulator.drawers.Drawable import Drawable
 
 
 class Constraint(ABC, Drawable, IndexedElement):

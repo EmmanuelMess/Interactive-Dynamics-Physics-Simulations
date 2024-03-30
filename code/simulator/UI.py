@@ -4,8 +4,8 @@ import pygame
 import numpy as np
 from typing import List
 
-from Simulation import Simulation
-from drawers.Drawable import Drawable
+from simulator.Simulation import Simulation
+from simulator.drawers.Drawable import Drawable
 
 
 class UI:

@@ -1,7 +1,7 @@
 import numpy as np
 
-from IndexedElement import IndexedElement
-from drawers.Drawable import Drawable
+from simulator.IndexedElement import IndexedElement
+from simulator.drawers.Drawable import Drawable
 
 
 class Particle(Drawable, IndexedElement):

@@ -1,6 +1,6 @@
 from typing import List, TypeVar, Generic
 
-from IndexedElement import IndexedElement
+from simulator.IndexedElement import IndexedElement
 
 
 T = TypeVar('T', bound=IndexedElement)

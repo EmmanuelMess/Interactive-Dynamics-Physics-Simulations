@@ -1,9 +1,9 @@
 import numba
 import numpy as np
 
-from IndexerIterator import IndexerIterator
-from Particle import Particle
-from constraints.Constraint import Constraint
+from simulator.IndexerIterator import IndexerIterator
+from simulator.Particle import Particle
+from simulator.constraints.Constraint import Constraint
 
 
 class SimulationFunctions:
