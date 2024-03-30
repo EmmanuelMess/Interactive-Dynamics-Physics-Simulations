@@ -4,9 +4,11 @@ import jax
 import jax.numpy as jnp
 from jax import jacfwd, grad, value_and_grad
 
+
 class ConstraintFunctions:
     @staticmethod
-    def computeDerivatives(constraintTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64])\
+    def computeDerivatives(
+            constraintTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64]) \
             -> Tuple[
                 Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64],
                 Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.float64],

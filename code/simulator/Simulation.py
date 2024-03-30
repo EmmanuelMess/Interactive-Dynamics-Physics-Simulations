@@ -1,5 +1,5 @@
 from timeit import default_timer as timer
-from typing import List, Callable
+from typing import Callable
 
 import numpy as np
 from scipy.optimize import root
@@ -11,9 +11,13 @@ from simulator.Particle import Particle
 from simulator.drawers.Drawable import Drawable
 
 
-class Simulation(Drawable):
-    def __init__(self, particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint], timestep: np.float64,
-                 force: Callable[[np.float64], np.ndarray], printData: bool = False):
+class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
+    """
+    Manage the state and step running for simulation
+    """
+
+    def __init__(self, particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
+                 timestep: np.float64, force: Callable[[np.float64], np.ndarray], printData: bool = False):
         super().__init__()
         self.particles = particles
         self.constraints = constraints
@@ -28,7 +32,12 @@ class Simulation(Drawable):
         from drawers.SimulationDrawer import SimulationDrawer
         self.setDrawer(SimulationDrawer(self))
 
-    def update(self):
+    def update(self) -> None:
+        """
+        Run internal simulation update.
+        :param timestep: Delta time at which the *next* step will be shown
+        """
+
         start = timer()
 
         if self.printData:
@@ -81,5 +90,5 @@ class Simulation(Drawable):
         self.updateTiming = end - start
         self.t += self.timestep
 
-    def getRunningTime(self):
+    def getRunningTime(self):  # pylint: disable=missing-function-docstring
         return self.t

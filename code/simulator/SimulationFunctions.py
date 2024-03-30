@@ -1,5 +1,7 @@
-import numba
+import numba  # type: ignore
 import numpy as np
+
+from typing_extensions import Tuple, Callable
 
 from simulator.IndexerIterator import IndexerIterator
 from simulator.Particle import Particle
@@ -10,15 +12,32 @@ class SimulationFunctions:
     @staticmethod
     @numba.njit
     def precompiledForceCalculation(J: np.ndarray, l: np.float64) -> np.ndarray:
+        """
+        Resulting force for the particles (see mathematical model)
+        """
         return (J.T @ l).reshape((-1, 2))
 
     @staticmethod
     @numba.njit
-    def precompiledLagrange(l: np.float64, f: np.ndarray, g: np.ndarray):
+    def precompiledLagrange(l: np.float64, f: np.ndarray, g: np.ndarray) -> np.ndarray:
+        # pylint: disable=too-many-arguments
+        """
+        Minimization to calculate correct forces as lagrangian multipliers (see mathematical model)
+        """
         return (g * l.T + f).reshape((-1,))
 
     @staticmethod
-    def matrices(particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint], weight: np.float64 = 1):
+    def matrices(particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
+                 weight: np.float64 = np.float64(1))\
+            -> Tuple[
+                Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,
+                      np.float64, np.float64],
+                Callable[[np.float64, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,
+                          np.ndarray, np.float64, np.float64], np.ndarray]
+            ]:  # pylint: disable=too-many-locals
+        """
+        Compute the matrices to run the lagrangian multipliers (see mathematical model)
+        """
         d = 2
         n = len(particles)
         m = len(constraints)

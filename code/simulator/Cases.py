@@ -228,9 +228,10 @@ def case8():
         constraints.append(DistanceConstraint(particles[i+i//N+K], particles[i+i//N], DISTANCE))
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[10*np.abs(np.sin(1000*t)), -10*np.abs(np.sin(1000*t))]] + [[0, 0] for i in range(len(particles)-1)], dtype=np.float64)
+        return np.array([[10 * np.abs(np.sin(1000 * t)), -10 * np.abs(np.sin(1000 * t))]]
+                        + [[0, 0] for i in range(len(particles) - 1)], dtype=np.float64)
 
     return IndexerIterator(particles), IndexerIterator(constraints), force
 
 
-CASES = { "1": case1, "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8 }
+CASES = {"1": case1, "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8}

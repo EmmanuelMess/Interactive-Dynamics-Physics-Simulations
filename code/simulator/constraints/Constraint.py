@@ -3,22 +3,19 @@ from abc import ABC, abstractmethod
 from typing import List, Callable, Tuple
 
 import jax.numpy as jnp
-import jax
-
-import numpy as np
 
 from simulator import PositionApproximation
 from simulator.IndexedElement import IndexedElement
 from simulator.Particle import Particle
-from simulator.drawers.Drawable import Drawable
 
 
-class Constraint(ABC, Drawable, IndexedElement):
+class Constraint(ABC, IndexedElement):
     particles: List[Particle]
 
     @abstractmethod
     def __init__(self, particles: List[Particle],
-                 constraintAndDerivativeOfTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], Tuple[jnp.float64, jnp.float64]],
+                 constraintAndDerivativeOfTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict],
+                                                         Tuple[jnp.float64, jnp.float64]],
                  dConstraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray],
                  d2Constraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray]):
         """
@@ -26,7 +23,6 @@ class Constraint(ABC, Drawable, IndexedElement):
         :param particles: All particles that are affected by this constraint
         For the rest of the parameters pass the result from Constraint.computeDerivatives
         """
-        super().__init__()
         self.particles = particles
         self.constraintAndDerivativeOfTime = constraintAndDerivativeOfTime
         self.dConstraint = dConstraint
@@ -36,7 +32,7 @@ class Constraint(ABC, Drawable, IndexedElement):
     def getArgs(self) -> dict:
         pass
 
-    def getFullParticleMatrices(self):
+    def getFullParticleMatrices(self) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
         positionMatrix = jnp.array([particle.x for particle in self.particles])
         velocityMatrix = jnp.array([particle.v for particle in self.particles])
         accelerationMatrix = jnp.array([particle.a for particle in self.particles])

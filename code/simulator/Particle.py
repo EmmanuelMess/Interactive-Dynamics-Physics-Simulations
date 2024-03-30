@@ -22,5 +22,5 @@ class Particle(Drawable, IndexedElement):
         self.aConstraint = np.zeros_like(x)
 
     def initDrawer(self):
-        from drawers.ParticleDrawer import ParticleDrawer # Prevent circular dependency
+        from simulator.drawers.ParticleDrawer import ParticleDrawer  # Prevent circular dependency
         self.setDrawer(ParticleDrawer(self))

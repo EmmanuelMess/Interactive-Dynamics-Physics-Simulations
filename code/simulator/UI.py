@@ -4,7 +4,6 @@ import pygame
 import numpy as np
 from typing import List
 
-from simulator.Simulation import Simulation
 from simulator.drawers.Drawable import Drawable
 
 
@@ -42,4 +41,3 @@ class UI:
         pygame.draw.line(self.screen, (0, 0, 0), (0, self.origin[1]), (self.size[0], self.origin[1]))
         self.showDrawables()
         pygame.display.flip()
-
