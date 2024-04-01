@@ -12,6 +12,7 @@ This is a test made for the [Constraint Based Simulator](https://github.com/Emma
 
 ### Setup
 ```bash
+cd code
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
@@ -19,6 +20,7 @@ python3 -m pip install -r requirements.txt
 
 ### Running
 ```bash
+cd code
 python3 main.py
 ```
 
