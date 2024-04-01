@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 
 from typing import List, Callable, Tuple
 
+import jax
 import jax.numpy as jnp
+import numpy as np
 
 from simulator import PositionApproximation
 from simulator.IndexedElement import IndexedElement
@@ -11,8 +13,6 @@ from simulator.drawers.Drawable import Drawable
 
 
 class Constraint(ABC, Drawable, IndexedElement):
-    particles: List[Particle]
-
     @abstractmethod
     def __init__(self, particles: List[Particle],
                  constraintAndDerivativeOfTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict],
@@ -33,15 +33,19 @@ class Constraint(ABC, Drawable, IndexedElement):
     def getArgs(self) -> dict:
         pass
 
-    def getFullParticleMatrices(self) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-        positionMatrix = jnp.array([particle.x for particle in self.particles])
-        velocityMatrix = jnp.array([particle.v for particle in self.particles])
-        accelerationMatrix = jnp.array([particle.a for particle in self.particles])
+    @staticmethod
+    @jax.jit
+    def getFullParticleMatrices(particlesX: List[np.ndarray], particlesV: List[np.ndarray], particlesA: List[np.ndarray]) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+        positionMatrix = jnp.array(particlesX, dtype=np.float64)
+        velocityMatrix = jnp.array(particlesV, dtype=np.float64)
+        accelerationMatrix = jnp.array(particlesA, dtype=np.float64)
 
         return positionMatrix, velocityMatrix, accelerationMatrix
 
     def get(self) -> Tuple[jnp.float64, jnp.float64, jnp.ndarray, jnp.ndarray]:
-        x, v, a = self.getFullParticleMatrices()
+        x, v, a = Constraint.getFullParticleMatrices([particle.x for particle in self.particles],
+                                                     [particle.v for particle in self.particles],
+                                                     [particle.a for particle in self.particles])
         args = self.getArgs()
         C, dC = self.constraintAndDerivativeOfTime(PositionApproximation.ZERO_TIME, x, v, a, args)
         J = self.dConstraint(PositionApproximation.ZERO_TIME, x, v, a, args)
