@@ -11,7 +11,7 @@ from simulator.constraints.Constraint import Constraint
 class SimulationFunctions:
     @staticmethod
     @numba.njit
-    def precompiledForceCalculation(J: np.ndarray, l: np.float64) -> np.ndarray:
+    def precompiledForceCalculation(J: np.ndarray, l: np.ndarray) -> np.ndarray:
         """
         Resulting force for the particles (see mathematical model)
         """
