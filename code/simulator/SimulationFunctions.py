@@ -18,6 +18,15 @@ class SimulationFunctions:
         return (J.T @ l).reshape((-1, 2))
 
     @staticmethod
+    @numba.njit
+    def precompiledMatricesComputation(ks: np.float64, kd: np.float64, dq: np.ndarray, Q: np.ndarray, C: np.ndarray,
+                                       dC: np.ndarray, W: np.ndarray, J: np.ndarray, dJ: np.ndarray)\
+            -> Tuple[np.ndarray, np.ndarray]:
+        f = dJ @ dq + J @ W @ Q + ks * C + kd * dC
+        g = J @ W @ J.T
+        return f, g
+
+    @staticmethod
     def matrices(particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
                  weight: np.float64 = np.float64(1))\
             -> Tuple[np.ndarray, np.ndarray, np.ndarray]:  # pylint: disable=too-many-locals
@@ -61,8 +70,7 @@ class SimulationFunctions:
         J = J.reshape((m, n * d))
         dJ = dJ.reshape((m, n * d))
 
-        f = dJ @ dq + J @ W @ Q + ks * C + kd * dC
-        g = J @ W @ J.T
+        f, g = SimulationFunctions.precompiledMatricesComputation(ks, kd, dq, Q, C, dC, W, J, dJ)
 
         return f, g, J
 
