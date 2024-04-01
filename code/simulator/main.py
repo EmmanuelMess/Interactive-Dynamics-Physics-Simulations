@@ -55,7 +55,9 @@ def main() -> None:
     # HACK First update will compile everything and is not representative for profiling
     simulation.update()
 
-    if args.profile and importlib.util.find_spec("scalene") is not None:
+    if args.profile:
+        if importlib.util.find_spec("scalene") is None:
+            print("Error: scalene not installed!")
         scalene_profiler.start()
 
     run(simulation, ui)
