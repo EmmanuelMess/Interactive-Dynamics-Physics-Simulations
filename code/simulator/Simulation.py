@@ -56,22 +56,21 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
-        lagrangeArgs, lagrange, J = SimulationFunctions.matrices(self.particles, self.constraints)
-        f, g = lagrangeArgs
+        f, g, J = SimulationFunctions.matrices(self.particles, self.constraints)
 
-        res = root(lagrange, x0=np.zeros(len(self.constraints), dtype=np.float64), method='lm', args=lagrangeArgs)
+        # Solve for λ in g λ = -f, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
+        l, residuals, _, _ = np.linalg.lstsq(g, -f)
 
-        aConstraint = SimulationFunctions.precompiledForceCalculation(J, res.x)
+        aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
 
-        self.error = np.sqrt(np.sum(lagrange(res.x, *lagrangeArgs)**2))
+        self.error = np.sum(residuals)
 
         if self.printData:
             print("J", J)
             print("dJ dq + J W Q + ks C + kd dC", f)
             print("J W J.T", g)
-
-            print("l", res.x)
-            print("f", lagrange(res.x, f, g))
+            print("λ", l)
+            print("Λ(λ)", g * l.T + f)
 
         for particle in self.particles:
             if particle.static:
