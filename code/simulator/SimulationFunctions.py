@@ -27,17 +27,15 @@ class SimulationFunctions:
         return f, g
 
     @staticmethod
-    def matrices(particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
-                 weight: np.float64 = np.float64(1))\
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray]:  # pylint: disable=too-many-locals
+    def matrices(ks: np.float64, kd: np.float64, particles: IndexerIterator[Particle],
+                 constraints: IndexerIterator[Constraint], weight: np.float64 = np.float64(1))\
+            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.float64]:  # pylint: disable=too-many-locals
         """
         Compute the matrices to run the lagrangian multipliers (see mathematical model)
         """
         d = 2
         n = len(particles)
         m = len(constraints)
-        ks = np.float64(0.00001)
-        kd = np.float64(0.01)
 
         dq = np.zeros((n, d), dtype=np.float64)
         Q = np.zeros((n, d), dtype=np.float64)
@@ -72,7 +70,7 @@ class SimulationFunctions:
 
         f, g = SimulationFunctions.precompiledMatricesComputation(ks, kd, dq, Q, C, dC, W, J, dJ)
 
-        return f, g, J
+        return f, g, J, np.linalg.norm(ks * C + kd * dC)
 
     @staticmethod
     def x(p: np.ndarray, v: np.ndarray, a: np.ndarray, t: np.float64) -> np.ndarray:

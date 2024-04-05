@@ -2,7 +2,7 @@ from timeit import default_timer as timer
 from typing import Callable
 
 import numpy as np
-from scipy.optimize import root  # type: ignore
+import scipy
 
 from simulator.IndexerIterator import IndexerIterator
 from simulator.SimulationFunctions import SimulationFunctions
@@ -25,8 +25,10 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         self.force = force
         self.printData = printData
         self.updateTiming: float = 0
+        self.ks = np.float64(0.1)
+        self.kd = 0.1 * self.ks
         self.t = np.float64(0)
-        self.error = np.float64(0)
+        self.error = "0"
 
     def initDrawer(self) -> None:
         from simulator.drawers.SimulationDrawer import SimulationDrawer
@@ -56,16 +58,17 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
-        f, g, J = SimulationFunctions.matrices(self.particles, self.constraints)
+        f, g, J, c = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
 
-        # Solve for λ in g λ = -f, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
-        l, residuals, _, _ = np.linalg.lstsq(g, -f)
+        # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
+        l, _, _, _ = np.linalg.lstsq(g, -f)
+        self.error = f"constraint {c} solve {np.linalg.norm(g * l + f)}"
 
         aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
 
-        self.error = np.sum(residuals)
-
         if self.printData:
+            print("ks", self.ks)
+            print("kd", self.kd)
             print("J", J)
             print("dJ dq + J W Q + ks C + kd dC", f)
             print("J W J.T", g)
