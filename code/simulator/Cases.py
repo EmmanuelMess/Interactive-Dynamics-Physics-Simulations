@@ -234,9 +234,63 @@ def case8() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
 
     return IndexerIterator(particles), IndexerIterator(constraints), force
 
+def case9() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Circle constrants single particle
+    """
+    particles: IndexerIterator[Particle] = IndexerIterator([Particle(np.array([25, 0], dtype=np.float64),)])
+
+    constraints: IndexerIterator[Constraint] = IndexerIterator([
+        CircleConstraint(particles[0], np.array([-125, 20], dtype=np.float64), np.float64(100)),
+        CircleConstraint(particles[0], np.array([125, 20], dtype=np.float64), np.float64(100))
+    ])
+
+    def force(t: np.float64) -> np.ndarray:
+        return np.array([[0, 0]], dtype=np.float64)
+
+    return particles, constraints, force
+
+
+def case10() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Distance constraints in a grid for a lot of particles
+    """
+    CONSTRAINT_DISTANCE = np.float64(150)
+    DISTANCE = 50
+    EXTERNAL_GRID_WIDTH = 4
+    INTERNAL_GRID_WIDTH = EXTERNAL_GRID_WIDTH-1
+
+    externalGrid = range(0, DISTANCE*EXTERNAL_GRID_WIDTH, DISTANCE)
+    internalGrid = range(DISTANCE//2, DISTANCE*INTERNAL_GRID_WIDTH, DISTANCE)
+    positionsGridA = [np.array([x, y], dtype=np.float64) for x in externalGrid for y in externalGrid]
+    positionsGridB = [np.array([x, y], dtype=np.float64) for x in internalGrid for y in internalGrid]
+
+    particles: List[Particle] = []
+
+    for xy in list(positionsGridA)+list(positionsGridB):
+        particles.append(Particle(np.array(xy, dtype=np.float64)))
+
+    constraints: List[Constraint] = []
+
+    M = len(positionsGridA)
+    K = EXTERNAL_GRID_WIDTH
+    N = INTERNAL_GRID_WIDTH
+
+    for i in range(len(positionsGridB)):
+        constraints.append(DistanceConstraint(particles[i+i//N], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(particles[i+i//N+1], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(particles[i+i//N+K], particles[i+M], CONSTRAINT_DISTANCE))
+        constraints.append(DistanceConstraint(particles[i+i//N+K+1], particles[i+M], CONSTRAINT_DISTANCE))
+
+    def force(t: np.float64) -> np.ndarray:
+        return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
+
+    return IndexerIterator(particles), IndexerIterator(constraints), force
+
 
 CASES: Dict[
     str,
     Callable[[], Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]]
 ] =\
-    {"1": case1, "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8}
+    {"1": case1, "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8, "9": case9,
+     "10": case10}
