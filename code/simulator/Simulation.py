@@ -17,11 +17,10 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self, particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
-                 timestep: np.float64, force: Callable[[np.float64], np.ndarray], printData: bool = False):
+                 force: Callable[[np.float64], np.ndarray], printData: bool = False):
         super().__init__()
         self.particles = particles
         self.constraints = constraints
-        self.timestep = timestep
         self.force = force
         self.printData = printData
         self.updateTiming: float = 0
@@ -35,7 +34,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
         super(Simulation, self).setDrawer(SimulationDrawer(self))
 
-    def update(self) -> None:
+    def update(self, timestep: np.float64) -> None:
         """
         Run internal simulation update.
         :param timestep: Delta time at which the *next* step will be shown
@@ -91,7 +90,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         end = timer()
 
         self.updateTiming = end - start
-        self.t += self.timestep
+        self.t += timestep
 
     def getRunningTime(self) -> np.float64:  # pylint: disable=missing-function-docstring
         return self.t

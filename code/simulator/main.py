@@ -26,7 +26,7 @@ def run(simulation: Simulation, ui: UI) -> None:
             if event.type == pygame.QUIT:
                 running = False
 
-        simulation.update()
+        simulation.update(ui.timestep)
 
         ui.update()
 
@@ -46,14 +46,14 @@ def main() -> None:
 
     timestep = (np.float64(0.00001))
     particles, constraints, force = Cases.CASES[args.case]()
-    simulation = Simulation(particles, constraints, timestep, force, False)
+    simulation = Simulation(particles, constraints, force, False)
     drawables = [typing.cast(Drawable, simulation)]\
             +typing.cast(List[Drawable], particles)\
             +typing.cast(List[Drawable], constraints)
     ui = UI(drawables, timestep)
 
     # HACK First update will compile everything and is not representative for profiling
-    simulation.update()
+    simulation.update(timestep)
 
     if args.profile:
         if importlib.util.find_spec("scalene") is None:
