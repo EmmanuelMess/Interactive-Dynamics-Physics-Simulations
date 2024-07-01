@@ -3,22 +3,22 @@ from typing import List
 import numpy as np
 from typing_extensions import Callable, Tuple, Dict
 
-from simulator.IndexerIterator import IndexerIterator
+from simulator import Indexer
 from simulator.Particle import Particle
 from simulator.constraints.CircleConstraint import CircleConstraint
 from simulator.constraints.Constraint import Constraint
 from simulator.constraints.DistanceConstraint import DistanceConstraint
 
 
-def case1() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case1() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Circle constrant single particle
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([
+    particles: List[Particle] = Indexer.indexer([
         Particle(np.array([25, 0], dtype=np.float64))
     ])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         CircleConstraint(particles[0], np.array([50, 20], dtype=np.float64), np.float64(100))
     ])
 
@@ -28,18 +28,18 @@ def case1() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case2() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraint single particle
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([
+    particles: List[Particle] = Indexer.indexer([
         Particle(np.array([50, 25], dtype=np.float64)),
         Particle(np.array([50, 50], dtype=np.float64)),
         Particle(np.array([25, 0], dtype=np.float64)),
         Particle(np.array([0, 0], dtype=np.float64)),
     ])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         DistanceConstraint(particles[0], particles[1], np.float64(100)),
         DistanceConstraint(particles[2], particles[3], np.float64(100)),
     ])
@@ -50,16 +50,16 @@ def case2() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case3() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case3() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Circle and distance constraints multi particles
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([
+    particles: List[Particle] = Indexer.indexer([
         Particle(np.array([0, 0], dtype=np.float64)),
         Particle(np.array([25, 25], dtype=np.float64))
     ])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         CircleConstraint(particles[0], np.array([25, 0], dtype=np.float64), np.float64(100)),
         DistanceConstraint(particles[0], particles[1], np.float64(20)),
     ])
@@ -70,11 +70,11 @@ def case3() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case4() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case4() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraints multi particles
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([
+    particles: List[Particle] = Indexer.indexer([
         Particle(np.array([0, 0], dtype=np.float64)),
         Particle(np.array([25, -25], dtype=np.float64)),
         Particle(np.array([50, 0], dtype=np.float64)),
@@ -84,7 +84,7 @@ def case4() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
         Particle(np.array([150, 0], dtype=np.float64)),
     ])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         DistanceConstraint(particles[0], particles[1], np.float64(25)),
         DistanceConstraint(particles[0], particles[2], np.float64(25)),
         DistanceConstraint(particles[1], particles[2], np.float64(25)),
@@ -104,11 +104,11 @@ def case4() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case5() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case5() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraints multi particles
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([
+    particles: List[Particle] = Indexer.indexer([
         Particle(np.array([0, 0], dtype=np.float64), static=True),
         Particle(np.array([25, -25], dtype=np.float64)),
         Particle(np.array([50, 0], dtype=np.float64)),
@@ -118,7 +118,7 @@ def case5() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
         Particle(np.array([150, 0], dtype=np.float64), static=True),
     ])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         DistanceConstraint(particles[0], particles[1], np.float64(50)),
         DistanceConstraint(particles[0], particles[2], np.float64(50)),
         DistanceConstraint(particles[1], particles[2], np.float64(50)),
@@ -138,13 +138,13 @@ def case5() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case6() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case6() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Circle constrant single particle
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([Particle(np.array([25, 0], dtype=np.float64),)])
+    particles: List[Particle] = Indexer.indexer([Particle(np.array([25, 0], dtype=np.float64),)])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         CircleConstraint(particles[0], np.array([50, 20], dtype=np.float64), np.float64(100)),
         CircleConstraint(particles[0], np.array([100, 20], dtype=np.float64), np.float64(100))
     ])
@@ -155,7 +155,7 @@ def case6() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case7() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case7() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraints in a grid for a lot of particles
     """
@@ -189,10 +189,10 @@ def case7() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
-    return IndexerIterator(particles), IndexerIterator(constraints), force
+    return Indexer.indexer(particles), Indexer.indexer(constraints), force
 
 
-def case8() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case8() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraints in a grid for a lot of particles
     """
@@ -232,15 +232,15 @@ def case8() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
         return np.array([[10 * np.abs(np.sin(1000 * t)), -10 * np.abs(np.sin(1000 * t))]]
                         + [[0, 0] for i in range(len(particles) - 1)], dtype=np.float64)
 
-    return IndexerIterator(particles), IndexerIterator(constraints), force
+    return Indexer.indexer(particles), Indexer.indexer(constraints), force
 
-def case9() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case9() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Circle constrants single particle
     """
-    particles: IndexerIterator[Particle] = IndexerIterator([Particle(np.array([25, 0], dtype=np.float64),)])
+    particles: List[Particle] = Indexer.indexer([Particle(np.array([25, 0], dtype=np.float64),)])
 
-    constraints: IndexerIterator[Constraint] = IndexerIterator([
+    constraints: List[Constraint] = Indexer.indexer([
         CircleConstraint(particles[0], np.array([-125, 20], dtype=np.float64), np.float64(100)),
         CircleConstraint(particles[0], np.array([125, 20], dtype=np.float64), np.float64(100))
     ])
@@ -251,7 +251,7 @@ def case9() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Cal
     return particles, constraints, force
 
 
-def case10() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]:
+def case10() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraints in a grid for a lot of particles
     """
@@ -285,12 +285,12 @@ def case10() -> Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Ca
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
-    return IndexerIterator(particles), IndexerIterator(constraints), force
+    return Indexer.indexer(particles), Indexer.indexer(constraints), force
 
 
 CASES: Dict[
     str,
-    Callable[[], Tuple[IndexerIterator[Particle], IndexerIterator[Constraint], Callable[[np.float64], np.ndarray]]]
+    Callable[[], Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]]
 ] =\
     {"1": case1, "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8, "9": case9,
      "10": case10}

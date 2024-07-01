@@ -1,9 +1,9 @@
 import numba  # type: ignore
 import numpy as np
 
-from typing_extensions import Tuple, Callable
+from typing_extensions import Tuple, List
 
-from simulator.IndexerIterator import IndexerIterator
+from simulator import Indexer
 from simulator.Particle import Particle
 from simulator.constraints.Constraint import Constraint
 
@@ -27,8 +27,8 @@ class SimulationFunctions:
         return f, g
 
     @staticmethod
-    def matrices(ks: np.float64, kd: np.float64, particles: IndexerIterator[Particle],
-                 constraints: IndexerIterator[Constraint], weight: np.float64 = np.float64(1))\
+    def matrices(ks: np.float64, kd: np.float64, particles: List[Particle],
+                 constraints: List[Constraint], weight: np.float64 = np.float64(1))\
             -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.float64]:  # pylint: disable=too-many-locals
         """
         Compute the matrices to run the lagrangian multipliers (see mathematical model)

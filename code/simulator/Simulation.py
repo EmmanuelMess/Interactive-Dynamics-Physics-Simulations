@@ -1,10 +1,10 @@
 from timeit import default_timer as timer
-from typing import Callable
+from typing import Callable, List
 
 import numpy as np
 import scipy
 
-from simulator.IndexerIterator import IndexerIterator
+from simulator import Indexer
 from simulator.SimulationFunctions import SimulationFunctions
 from simulator.constraints.Constraint import Constraint
 from simulator.Particle import Particle
@@ -16,7 +16,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
     Manage the state and step running for simulation
     """
 
-    def __init__(self, particles: IndexerIterator[Particle], constraints: IndexerIterator[Constraint],
+    def __init__(self, particles: List[Particle], constraints: List[Constraint],
                  force: Callable[[np.float64], np.ndarray], printData: bool = False):
         super().__init__()
         self.particles = particles
