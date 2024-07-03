@@ -73,11 +73,13 @@ $$
 \end{bmatrix}
 $$
 
-With these we can compute the lagrangain for:
+With these we can compute λ such that:
 
 $$
-(J W J^T) {\lambda}^T + \dot{J} \dot{\widetilde{x}} + J W \ddot{\widetilde{x}} + k_s C + k_d \dot{C}
+(J W J^T) {\lambda}^T + \dot{J} \dot{\widetilde{x}} + J W \ddot{\widetilde{x}} + k_s C + k_d \dot{C} = 0
 $$
+
+We compute using an approximate least squares method.
 
 ## Thanks
 * [Interactive Dynamics](https://dl.acm.org/doi/pdf/10.1145/91394.91400) by Andrew Witkin, Michael Gleicher and William Welch
