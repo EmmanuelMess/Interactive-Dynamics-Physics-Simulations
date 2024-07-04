@@ -60,7 +60,9 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         f, g, J, c = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
 
         # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
-        l, _, _, _ = np.linalg.lstsq(g, -f)
+        r: scipy.optimize.OptimizeResult = scipy.optimize.least_squares(lambda l: g @ l + f, np.zeros_like(f),
+                                                                        jac=lambda _: g, method='trf')
+        l: np.ndarray = r.x
         self.error = f"constraint {c} solve {np.linalg.norm(g * l + f)}"
 
         aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
