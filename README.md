@@ -37,39 +37,44 @@ Generate a new `Constraint` subclass and use it in a case.
 This explanation is meant to complement the references, please read that first. This explains
 how to compute the derivates with respect to time and position.
 
-C(t) is a constraint function so that:
+$C_p(t)$ is a constraint function on a set of particles $p$ so that:
 
-$$ \exists t / C(t) = 0 \land \exists \dot{C} $$
+$$ \exists t / C_p(t) = 0 \land \exists \dot{C_p} $$
 
-To obtain the constraint as a function of particle position (instead of time) we use:
+To obtain the constraint as a function of particles positions (instead of time) we use:
 
-$$ \exists \widetilde{C}(x) / \widetilde{C}(x(t)) = C(t) $$
+$$ \widetilde{C}_p(x(t)) = C_p(t) $$
 
-We don't have x(t) analitically, but we can use an approximation:
+We don't have the single particle $x(t)$ function analitically, but we can use an approximation (a Taylor approximation at $t = 0$):
 
-$$ \widetilde{C}(\widetilde{x}(t)) \approx C(t) $$
+$$ \widetilde{C}_p(\widetilde{x}(t)) \approx C_p(t) $$
 
-$$ \exists \widetilde{x}(0) \approx x(t) / \widetilde{x}(0) = x_t \land \dot{\widetilde{x}}(0) = v_t \land \ddot{\widetilde{x}}(0) = a_t$$
+$$ \widetilde{x}(t) = x + t * v + \frac{1}{2} * t^2 * a \approx x(t) $$
 
-I use a Taylor approximation at t = 0:
+$$ \widetilde{x}(0) = x_t \land \dot{\widetilde{x}}(0) = v_t \land \ddot{\widetilde{x}}(0) = a_t $$
 
-$$ \widetilde{x}(t) = x + t * v + \frac{1}{2} * t^2 * a $$
+And that lets us compute the derivatives ($p_i \in p$ and $C^i$ is a constraint):
 
-And that lets us compute the derivatives:
+$$ C = \begin{bmatrix} C^0(0) & \cdots & C^m(0) \end{bmatrix}^T $$
 
-$$ C $$
-
-$$ \dot{C} $$
+$$ \dot{C} = \begin{bmatrix} 
+ \frac{\partial C^0} {\partial t}(0) & \cdots & \frac{\partial C^m} {\partial t}(0)
+\end{bmatrix}^T
+$$
 
 $$
 J = \begin{bmatrix}
- \frac{\partial \widetilde{C}}{\partial x_1} & \frac{\partial \widetilde{C}}{\partial x_2}  \\
+  \frac{\partial C_ {p_0}^0}{\partial x_1} & \frac{\partial C_ {p_0}^0}{\partial x_2} & \cdots & \frac{\partial C_ {p_n}^0}{\partial x_1} & \frac{\partial C_ {p_n}^0}{\partial x_2}  \\
+  \vdots & & \vdots & & \vdots \\
+  \frac{\partial C_ {p_0}^m}{\partial x_1} & \frac{\partial C_ {p_0}^m}{\partial x_2} & \cdots & \frac{\partial C_ {p_n}^m}{\partial x_1} & \frac{\partial C_ {p_n}^m}{\partial x_2}  \\
 \end{bmatrix}
 $$
 
 $$
 \dot{J} = \begin{bmatrix}
- \frac{\partial \dot{\widetilde{C}}}{\partial x_1} & \frac{\partial \dot{\widetilde{C}}}{\partial x_2}  \\
+  \frac{\partial \dot{C}_ {p_0}}{\partial x_1} & \frac{\partial \dot{C}_ {p_0}}{\partial x_2} & \cdots & \frac{\partial \dot{C}_ {p_n}}{\partial x_1} & \frac{\partial \dot{C}_ {p_n}}{\partial x_2}  \\
+  \vdots & & \vdots & & \vdots \\
+  \frac{\partial \dot{C}_ {p_0}}{\partial x_1} & \frac{\partial \dot{C}_ {p_0}}{\partial x_2} & \cdots & \frac{\partial \dot{C}_ {p_n}}{\partial x_1} & \frac{\partial \dot{C}_ {p_n}}{\partial x_2}  \\
 \end{bmatrix}
 $$
 
