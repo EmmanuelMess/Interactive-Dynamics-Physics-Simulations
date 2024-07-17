@@ -23,13 +23,13 @@ class SimulationFunctions:
                                        dC: np.ndarray, W: np.ndarray, J: np.ndarray, dJ: np.ndarray)\
             -> Tuple[np.ndarray, np.ndarray]:
         f = dJ @ dq + J @ W @ Q + ks * C + kd * dC
-        g = J @ W @ J.T
+        g = J @ W @ J.T @ (np.eye(J.shape[0]) * 3)
         return f, g
 
     @staticmethod
     def matrices(ks: np.float64, kd: np.float64, particles: List[Particle],
                  constraints: List[Constraint], weight: np.float64 = np.float64(1))\
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.float64]:  # pylint: disable=too-many-locals
+            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:  # pylint: disable=too-many-locals
         """
         Compute the matrices to run the lagrangian multipliers (see mathematical model)
         """
@@ -70,7 +70,7 @@ class SimulationFunctions:
 
         f, g = SimulationFunctions.precompiledMatricesComputation(ks, kd, dq, Q, C, dC, W, J, dJ)
 
-        return f, g, J, np.linalg.norm(ks * C + kd * dC)
+        return f, g, J, C, dC
 
     @staticmethod
     def x(p: np.ndarray, v: np.ndarray, a: np.ndarray, t: np.float64) -> np.ndarray:

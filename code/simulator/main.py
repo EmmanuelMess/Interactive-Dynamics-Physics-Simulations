@@ -44,7 +44,7 @@ def main() -> None:
     DistanceConstraintFunctions()
     print("Done")
 
-    timestep = (np.float64(0.00001))
+    timestep = (np.float64(0.001))
     particles, constraints, force = Cases.CASES[args.case]()
     simulation = Simulation(particles, constraints, force, False)
     drawables = [typing.cast(Drawable, simulation)]\

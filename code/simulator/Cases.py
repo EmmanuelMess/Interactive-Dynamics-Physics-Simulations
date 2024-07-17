@@ -28,6 +28,24 @@ def case1() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
     return particles, constraints, force
 
 
+def case_dot_single_particle() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Circle constrant single particle
+    """
+    particles: List[Particle] = Indexer.indexer([
+        Particle(np.array([25, 0], dtype=np.float64))
+    ])
+
+    constraints: List[Constraint] = Indexer.indexer([
+        CircleConstraint(particles[0], np.array([50, 20], dtype=np.float64), np.float64(0.01))
+    ])
+
+    def force(t: np.float64) -> np.ndarray:
+        return np.array([[0, 0]], dtype=np.float64)
+
+    return particles, constraints, force
+
+
 def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraint single particle
@@ -292,5 +310,7 @@ CASES: Dict[
     str,
     Callable[[], Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]]
 ] =\
-    {"1": case1, "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8, "9": case9,
+    {"1": case1,
+     "dot_single_particle": case_dot_single_particle,
+     "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8, "9": case9,
      "10": case10}

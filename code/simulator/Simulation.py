@@ -24,8 +24,8 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         self.force = force
         self.printData = printData
         self.updateTiming: float = 0
-        self.ks = np.float64(0.1)
-        self.kd = 0.1 * self.ks
+        self.ks = np.float64(1000)
+        self.kd = np.sqrt(4 * self.ks)
         self.t = np.float64(0)
         self.error = "0"
 
@@ -57,13 +57,13 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
-        f, g, J, c = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
+        f, g, J, C, dC = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
 
         # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
         r: scipy.optimize.OptimizeResult = scipy.optimize.least_squares(lambda l: g @ l + f, np.zeros_like(f),
                                                                         jac=lambda _: g, method='trf')
         l: np.ndarray = r.x
-        self.error = f"constraint {c} solve {np.linalg.norm(g * l + f)}"
+        self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
 
         aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
 
@@ -86,8 +86,8 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             if self.printData:
                 print("i", particle.index, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
 
-            particle.x = SimulationFunctions.x(particle.x, particle.v, particle.a, self.t)
-            particle.v = SimulationFunctions.dx(particle.x, particle.v, particle.a, self.t)
+            particle.x = SimulationFunctions.x(particle.x, particle.v, particle.a, timestep)
+            particle.v = SimulationFunctions.dx(particle.x, particle.v, particle.a, timestep)
 
         end = timer()
 

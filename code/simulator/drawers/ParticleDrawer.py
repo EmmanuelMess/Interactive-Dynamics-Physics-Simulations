@@ -17,7 +17,7 @@ class ParticleDrawer(Drawer):
         self.label = self.font.render(f"{self.particle.index}", True, (0, 0, 0))
 
     def draw(self, surface: pygame.Surface, origin: np.ndarray) -> None:
-        c = 10
+        c = 0.1
         p = origin + self.particle.x
         aApplied = p + self.particle.aApplied * c
         aConstraint = p + self.particle.aConstraint * c
