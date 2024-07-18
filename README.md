@@ -78,10 +78,16 @@ $$
 \end{bmatrix}
 $$
 
-With these we can compute λ such that:
+We can use the result:
 
 $$
-(J W J^T) {\lambda}^T + \dot{J} \dot{\widetilde{x}} + J W \ddot{\widetilde{x}} + k_s C + k_d \dot{C} = 0
+\ddot{C} = (J W J^T) {\lambda}^T + \dot{J} \dot{\widetilde{x}} + J W \ddot{\widetilde{x}} = - k_s C - k_d \dot{C}
+$$
+
+And compute λ such that:
+
+$$
+ (J W J^T) {\lambda}^T + \dot{J} \dot{\widetilde{x}} + J W \ddot{\widetilde{x}} + k_s C + k_d \dot{C} = 0
 $$
 
 We compute using an approximate least squares method.
