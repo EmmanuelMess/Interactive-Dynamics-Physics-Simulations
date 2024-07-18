@@ -247,7 +247,7 @@ def case8() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         constraints.append(DistanceConstraint(particles[i+i//N+K], particles[i+i//N], np.float64(DISTANCE)))
 
     def force(t: np.float64) -> np.ndarray:
-        return np.array([[10 * np.abs(np.sin(1000 * t)), -10 * np.abs(np.sin(1000 * t))]]
+        return np.array([[1000 * np.abs(np.sin(100 * t)), -1000 * np.abs(np.sin(100 * t))]]
                         + [[0, 0] for i in range(len(particles) - 1)], dtype=np.float64)
 
     return Indexer.indexer(particles), Indexer.indexer(constraints), force
