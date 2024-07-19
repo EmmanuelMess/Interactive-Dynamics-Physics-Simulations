@@ -72,9 +72,9 @@ $$
 
 $$
 \dot{J} = \begin{bmatrix}
-  \frac{\partial \dot{C}_ {p_0}}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_0}}{\partial x_2}(0) & \cdots & \frac{\partial \dot{C}_ {p_n}}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_n}}{\partial x_2}(0)  \\
+  \frac{\partial \dot{C}_ {p_0}^0}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_0}^0}{\partial x_2}(0) & \cdots & \frac{\partial \dot{C}_ {p_n}^0}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_n}^0}{\partial x_2}(0)  \\
   \vdots & & \vdots & & \vdots \\
-  \frac{\partial \dot{C}_ {p_0}}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_0}}{\partial x_2}(0) & \cdots & \frac{\partial \dot{C}_ {p_n}}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_n}}{\partial x_2}(0)  \\
+  \frac{\partial \dot{C}_ {p_0}^m}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_0}^m}{\partial x_2}(0) & \cdots & \frac{\partial \dot{C}_ {p_n}^m}{\partial x_1}(0) & \frac{\partial \dot{C}_ {p_n}^m}{\partial x_2}(0)  \\
 \end{bmatrix}
 $$
 
