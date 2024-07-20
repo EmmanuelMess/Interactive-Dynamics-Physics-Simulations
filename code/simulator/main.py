@@ -16,6 +16,9 @@ import importlib.util
 
 from simulator.drawers.Drawable import Drawable
 
+from simulator.graphs.AccelerationPortrait import AccelerationPortrait
+from simulator.graphs.CostGraph import CostGraph
+
 if importlib.util.find_spec("scalene") is not None:
     from scalene import scalene_profiler  # type: ignore
 
@@ -47,6 +50,9 @@ def main() -> None:
     timestep = (np.float64(0.001))
     particles, constraints, force = Cases.CASES[args.case]()
     simulation = Simulation(particles, constraints, force, False)
+    #simulation.generateGraph(AccelerationPortrait(np.array([0, 0], dtype=np.float64)))
+    #simulation.generateGraph(CostGraph(np.array([0, 0], dtype=np.float64)))
+
     drawables = [typing.cast(Drawable, simulation)]\
             +typing.cast(List[Drawable], particles)\
             +typing.cast(List[Drawable], constraints)

@@ -4,13 +4,14 @@ import pygame
 import numpy as np
 from typing import List
 
+from simulator.Constants import HEIGHT, WIDTH
 from simulator.drawers.Drawable import Drawable
 
 
 class UI:
     def __init__(self, drawables: List[Drawable], timestep: np.float64) -> None:
         self.drawables, self.timestep = drawables, timestep
-        self.size = [500, 500]
+        self.size = [HEIGHT, WIDTH]
         self.origin = np.array(self.size)/2
         self.running = True
 

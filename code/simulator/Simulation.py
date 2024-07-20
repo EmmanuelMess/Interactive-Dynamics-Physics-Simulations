@@ -4,7 +4,6 @@ from typing import Callable, List
 import numpy as np
 import scipy
 
-from simulator import Indexer
 from simulator.SimulationFunctions import SimulationFunctions
 from simulator.constraints.Constraint import Constraint
 from simulator.Particle import Particle
@@ -33,6 +32,31 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         from simulator.drawers.SimulationDrawer import SimulationDrawer
 
         super(Simulation, self).setDrawer(SimulationDrawer(self))
+
+    def generateGraph(self, grapher: 'Graph'):
+        def acceleration(x, v) -> np.ndarray:
+            particle = self.particles[0]
+            particle.x = x
+            particle.v = v
+
+            if not particle.static:
+                particle.aApplied = self.force(self.t)[particle.index].copy()
+                particle.a = particle.aApplied.copy()
+
+            f, g, J, C, dC = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
+
+            # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
+            r: scipy.optimize.OptimizeResult = scipy.optimize.least_squares(lambda l: g @ l + f, np.zeros_like(f),
+                                                                            jac=lambda _: g, method='trf')
+            l: np.ndarray = r.x
+            self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
+
+            aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
+
+            return aConstraint[particle.index]
+
+        grapher.draw(acceleration, self.constraints, self.particles)
+
 
     def update(self, timestep: np.float64) -> None:
         """
