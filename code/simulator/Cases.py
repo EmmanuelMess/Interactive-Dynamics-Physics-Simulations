@@ -46,6 +46,47 @@ def case_dot_single_particle() -> Tuple[List[Particle], List[Constraint], Callab
     return particles, constraints, force
 
 
+def case_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Pendulum under gravity
+    """
+    particles: List[Particle] = Indexer.indexer([
+        Particle(np.array([50, -50], dtype=np.float64))
+    ])
+
+    constraints: List[Constraint] = Indexer.indexer([
+        CircleConstraint(particles[0], np.array([0, 0], dtype=np.float64), np.float64(100))
+    ])
+
+    def force(t: np.float64) -> np.ndarray:
+        g = 9.8
+        return np.array([[0, -g]], dtype=np.float64)
+
+    return particles, constraints, force
+
+
+def case_double_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Double pendulum under gravity
+    """
+    particles: List[Particle] = Indexer.indexer([
+        Particle(np.array([50, -50], dtype=np.float64)),
+        Particle(np.array([50, -100], dtype=np.float64))
+    ])
+
+    constraints: List[Constraint] = Indexer.indexer([
+        CircleConstraint(particles[0], np.array([0, 0], dtype=np.float64), np.float64(100)),
+        DistanceConstraint(particles[0], particles[1], np.float64(50))
+    ])
+
+    def force(t: np.float64) -> np.ndarray:
+        g = 9.8
+        return np.array([[0, -g], [0, -g]], dtype=np.float64)
+
+    return particles, constraints, force
+
+
+
 def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraint single particle
@@ -152,6 +193,42 @@ def case5() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
     def force(t: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
+
+    return particles, constraints, force
+
+
+def case_hanging_bridge() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Distance constraints multi particles
+    """
+    particles: List[Particle] = Indexer.indexer([
+        Particle(np.array([-90, 0], dtype=np.float64), static=True),
+        Particle(np.array([-70, 0], dtype=np.float64)),
+        Particle(np.array([-50, 0], dtype=np.float64)),
+        Particle(np.array([-30, 0], dtype=np.float64)),
+        Particle(np.array([-10, 0], dtype=np.float64)),
+        Particle(np.array([10, 0], dtype=np.float64)),
+        Particle(np.array([30, 0], dtype=np.float64)),
+        Particle(np.array([50, 0], dtype=np.float64)),
+        Particle(np.array([70, 0], dtype=np.float64)),
+        Particle(np.array([90, 0], dtype=np.float64), static=True),
+    ])
+
+    constraints: List[Constraint] = Indexer.indexer([
+        DistanceConstraint(particles[0], particles[1], np.float64(25)),
+        DistanceConstraint(particles[1], particles[2], np.float64(25)),
+        DistanceConstraint(particles[2], particles[3], np.float64(25)),
+        DistanceConstraint(particles[3], particles[4], np.float64(25)),
+        DistanceConstraint(particles[4], particles[5], np.float64(25)),
+        DistanceConstraint(particles[5], particles[6], np.float64(25)),
+        DistanceConstraint(particles[6], particles[7], np.float64(25)),
+        DistanceConstraint(particles[7], particles[8], np.float64(25)),
+        DistanceConstraint(particles[8], particles[9], np.float64(25)),
+    ])
+
+    def force(t: np.float64) -> np.ndarray:
+        g = 9.8
+        return np.array([[0, -g] for i in range(len(particles))], dtype=np.float64)
 
     return particles, constraints, force
 
@@ -312,5 +389,9 @@ CASES: Dict[
 ] =\
     {"1": case1,
      "dot_single_particle": case_dot_single_particle,
-     "2": case2, "3": case3, "4": case4, "5": case5, "6": case6, "7": case7, "8": case8, "9": case9,
+     "pendulum": case_pendulum,
+     "double_pendulum": case_double_pendulum,
+     "2": case2, "3": case3, "4": case4, "5": case5,
+     "hanging_bridge": case_hanging_bridge,
+     "6": case6, "7": case7, "8": case8, "9": case9,
      "10": case10}

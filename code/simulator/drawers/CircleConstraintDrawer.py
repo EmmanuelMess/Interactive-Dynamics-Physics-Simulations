@@ -10,7 +10,7 @@ class CircleConstraintDrawer(Drawer):
         self.circleConstraint = circleConstraint
 
     def draw(self, surface: pygame.Surface, origin: np.ndarray) -> None:
-        c = self.circleConstraint.center + origin
+        c = origin + self.circleConstraint.center * np.array([1, -1], dtype=np.float64)
         r: float = self.circleConstraint.radius.item()
         rect = pygame.Rect((c[0] - r).item(), (c[1] - r).item(), r * 2, r * 2)
         pygame.draw.ellipse(surface, (0, 0, 0), rect, width=1)

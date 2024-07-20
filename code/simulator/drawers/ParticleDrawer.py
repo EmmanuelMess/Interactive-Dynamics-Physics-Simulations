@@ -18,9 +18,9 @@ class ParticleDrawer(Drawer):
 
     def draw(self, surface: pygame.Surface, origin: np.ndarray) -> None:
         c = 0.1
-        p = origin + self.particle.x
-        aApplied = p + self.particle.aApplied * c
-        aConstraint = p + self.particle.aConstraint * c
+        p = origin + self.particle.x * np.array([1, -1], dtype=np.float64)
+        aApplied = p + self.particle.aApplied * c * np.array([1, -1], dtype=np.float64)
+        aConstraint = p + self.particle.aConstraint * c * np.array([1, -1], dtype=np.float64)
         pygame.draw.line(surface, (0, 255, 0), p, aApplied)
         pygame.draw.line(surface, (255, 0, 0), p, aConstraint)
         pygame.draw.circle(surface, (255, 0, 0) if self.particle.static else (0, 0, 255), p, self.radius)
