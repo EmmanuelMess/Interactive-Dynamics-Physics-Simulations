@@ -8,6 +8,6 @@ T = TypeVar('T', bound=IndexedElement)
 
 def indexer(list: List[T]) -> List[T]:
     for index, element in enumerate(list):
-        element.index = index
+        element.setIndex(index)
 
     return list
