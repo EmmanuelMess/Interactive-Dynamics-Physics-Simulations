@@ -408,13 +408,13 @@ def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
     for i in range(len(externalGridX)):
         for j in range(len(externalGridY)):
             if j + 1 in range(len(externalGridY)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j + 1)*K], DISTANCE))
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j + 1)*K], np.float64(DISTANCE)))
             if j - 1 in range(len(externalGridY)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j - 1)*K], DISTANCE))
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j - 1)*K], np.float64(DISTANCE)))
             if i-1 in range(len(externalGridX)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i-1) + j*K], DISTANCE))
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i-1) + j*K], np.float64(DISTANCE)))
             if i+1 in range(len(externalGridX)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + j*K], DISTANCE))
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + j*K], np.float64(DISTANCE)))
             if i+1 in range(len(externalGridX)) and j + 1 in range(len(externalGridY)):
                 constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + (j+1)*K], DISTANCE_DIAGONAL))
             if i + 1 in range(len(externalGridX)) and j - 1 in range(len(externalGridY)):
