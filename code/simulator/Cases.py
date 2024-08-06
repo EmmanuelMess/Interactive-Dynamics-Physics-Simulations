@@ -394,7 +394,8 @@ def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
 
     externalGridX = range(-DISTANCE*(GRID_WIDTH//2)+1, DISTANCE*(GRID_WIDTH//2), DISTANCE)
     externalGridY = range(-DISTANCE*(GRID_HEIGHT//2)+1, DISTANCE*(GRID_HEIGHT//2), DISTANCE)
-    positionsGridA = [np.array([x, y], dtype=np.float64) for y in externalGridY for x in externalGridX] # x y inverted because of resulting list order
+    # x y inverted because of resulting list order
+    positionsGridA = [np.array([x, y], dtype=np.float64) for y in externalGridY for x in externalGridX]
 
     particles: List[Particle] = []
 
@@ -403,26 +404,40 @@ def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
 
     constraints: List[Constraint] = []
 
-    K = GRID_WIDTH
+    d = np.float64(DISTANCE)
 
     for i in range(len(externalGridX)):
         for j in range(len(externalGridY)):
             if j + 1 in range(len(externalGridY)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j + 1)*K], np.float64(DISTANCE)))
+                constraints.append(
+                    DistanceConstraint(particles[i + j * GRID_WIDTH], particles[i + (j + 1)*GRID_WIDTH], d)
+                )
             if j - 1 in range(len(externalGridY)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j - 1)*K], np.float64(DISTANCE)))
+                constraints.append(
+                    DistanceConstraint(particles[i + j * GRID_WIDTH], particles[i + (j - 1)*GRID_WIDTH], d)
+                )
             if i-1 in range(len(externalGridX)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i-1) + j*K], np.float64(DISTANCE)))
+                constraints.append(
+                    DistanceConstraint(particles[i + j * GRID_WIDTH], particles[(i-1) + j*GRID_WIDTH], d)
+                )
             if i+1 in range(len(externalGridX)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + j*K], np.float64(DISTANCE)))
+                constraints.append(
+                    DistanceConstraint(particles[i + j * GRID_WIDTH], particles[(i+1) + j*GRID_WIDTH], d)
+                )
             if i+1 in range(len(externalGridX)) and j + 1 in range(len(externalGridY)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + (j+1)*K], DISTANCE_DIAGONAL))
+                constraints.append(
+                    DistanceConstraint(particles[i + j * GRID_WIDTH], particles[(i+1) + (j+1)*GRID_WIDTH],
+                                       DISTANCE_DIAGONAL)
+                )
             if i + 1 in range(len(externalGridX)) and j - 1 in range(len(externalGridY)):
-                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i + 1) + (j - 1) * K], DISTANCE_DIAGONAL))
+                constraints.append(
+                    DistanceConstraint(particles[i + j * GRID_WIDTH], particles[(i + 1) + (j - 1) * GRID_WIDTH],
+                                       DISTANCE_DIAGONAL)
+                )
 
     constraints.append(CircleConstraint(particles[GRID_WIDTH//2], positionsGridA[GRID_WIDTH//2], np.float64(1)))
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, -900]] + [[0, 0] for i in range(len(particles) - 1)], dtype=np.float64)
 
     return Indexer.indexer(particles), Indexer.indexer(constraints), force
