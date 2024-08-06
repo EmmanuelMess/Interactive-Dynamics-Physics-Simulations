@@ -383,6 +383,51 @@ def case10() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
     return Indexer.indexer(particles), Indexer.indexer(constraints), force
 
 
+def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    """
+    Distance constraints in a grid for a lot of particles
+    """
+    DISTANCE = 20
+    DISTANCE_DIAGONAL = np.sqrt(DISTANCE*DISTANCE*2, dtype=np.float64)
+    GRID_WIDTH = 16
+    GRID_HEIGHT = 4
+
+    externalGridX = range(-DISTANCE*(GRID_WIDTH//2)+1, DISTANCE*(GRID_WIDTH//2), DISTANCE)
+    externalGridY = range(-DISTANCE*(GRID_HEIGHT//2)+1, DISTANCE*(GRID_HEIGHT//2), DISTANCE)
+    positionsGridA = [np.array([x, y], dtype=np.float64) for y in externalGridY for x in externalGridX] # x y inverted because of resulting list order
+
+    particles: List[Particle] = []
+
+    for xy in list(positionsGridA):
+        particles.append(Particle(np.array(xy, dtype=np.float64)))
+
+    constraints: List[Constraint] = []
+
+    K = GRID_WIDTH
+
+    for i in range(len(externalGridX)):
+        for j in range(len(externalGridY)):
+            if j + 1 in range(len(externalGridY)):
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j + 1)*K], DISTANCE))
+            if j - 1 in range(len(externalGridY)):
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[i + (j - 1)*K], DISTANCE))
+            if i-1 in range(len(externalGridX)):
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i-1) + j*K], DISTANCE))
+            if i+1 in range(len(externalGridX)):
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + j*K], DISTANCE))
+            if i+1 in range(len(externalGridX)) and j + 1 in range(len(externalGridY)):
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i+1) + (j+1)*K], DISTANCE_DIAGONAL))
+            if i + 1 in range(len(externalGridX)) and j - 1 in range(len(externalGridY)):
+                constraints.append(DistanceConstraint(particles[i + j * K], particles[(i + 1) + (j - 1) * K], DISTANCE_DIAGONAL))
+
+    constraints.append(CircleConstraint(particles[GRID_WIDTH//2], positionsGridA[GRID_WIDTH//2], np.float64(1)))
+
+    def force(t: np.float64) -> np.ndarray:
+        return np.array([[0, -900]] + [[0, 0] for i in range(len(particles) - 1)], dtype=np.float64)
+
+    return Indexer.indexer(particles), Indexer.indexer(constraints), force
+
+
 CASES: Dict[
     str,
     Callable[[], Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]]
@@ -394,4 +439,4 @@ CASES: Dict[
      "2": case2, "3": case3, "4": case4, "5": case5,
      "hanging_bridge": case_hanging_bridge,
      "6": case6, "7": case7, "8": case8, "9": case9,
-     "10": case10}
+     "10": case10, "torque": torque}
