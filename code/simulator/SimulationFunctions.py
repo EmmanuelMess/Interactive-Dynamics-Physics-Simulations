@@ -10,7 +10,7 @@ from simulator.constraints.Constraint import Constraint
 
 class SimulationFunctions:
     @staticmethod
-    @numba.njit
+    @numba.jit(nopython=True, parallel=True, fastmath=True)
     def precompiledForceCalculation(J: np.ndarray, l: np.ndarray) -> np.ndarray:
         """
         Resulting force for the particles (see mathematical model)
@@ -18,7 +18,7 @@ class SimulationFunctions:
         return (J.T @ l).reshape((-1, 2))
 
     @staticmethod
-    @numba.njit
+    @numba.jit(nopython=True, parallel=True, fastmath=True)
     def precompiledMatricesComputation(ks: np.float64, kd: np.float64, dq: np.ndarray, Q: np.ndarray, C: np.ndarray,
                                        dC: np.ndarray, W: np.ndarray, J: np.ndarray, dJ: np.ndarray)\
             -> Tuple[np.ndarray, np.ndarray]:

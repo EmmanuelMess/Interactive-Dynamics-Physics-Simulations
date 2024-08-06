@@ -11,6 +11,7 @@ from typing_extensions import List
 from simulator import Cases, Constants
 from simulator.Particle import Particle
 from simulator.Simulation import Simulation
+from simulator.SimulationFunctions import SimulationFunctions
 from simulator.UI import UI
 from simulator.constraints.functions.CircleConstraintFunctions import CircleConstraintFunctions
 from simulator.constraints.functions.DistanceConstraintFunctions import DistanceConstraintFunctions
