@@ -26,6 +26,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         self.ks = np.float64(1000)
         self.kd = np.sqrt(4 * self.ks)
         self.t = np.float64(0)
+        self.lastSecondIterations = []
         self.error = "0"
 
     def initDrawer(self) -> None:
@@ -116,6 +117,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         end = timer()
 
         self.updateTiming = end - start
+        self.lastSecondIterations = [oldEnd for oldEnd in self.lastSecondIterations if end-oldEnd < 1]+[end]
         self.t += timestep
 
     def getRunningTime(self) -> np.float64:  # pylint: disable=missing-function-docstring

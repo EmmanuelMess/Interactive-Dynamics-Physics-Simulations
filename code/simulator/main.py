@@ -1,6 +1,8 @@
 import argparse
 import typing
 
+from timeit import default_timer as timer
+
 import numpy as np
 
 import pygame
@@ -24,14 +26,17 @@ if importlib.util.find_spec("scalene") is not None:
 
 def run(simulation: Simulation, ui: UI) -> None:
     running = True
+    lastFrame = timer()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        simulation.update(ui.timestep)
+        while timer() - lastFrame < 1.0/60.0:
+            simulation.update(ui.timestep)
 
         ui.update()
+        lastFrame = timer()
 
     pygame.quit()
 
