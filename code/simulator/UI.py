@@ -4,6 +4,7 @@ import pygame
 import numpy as np
 from typing import List
 
+from simulator import Constants
 from simulator.Constants import HEIGHT, WIDTH
 from simulator.drawers.Drawable import Drawable
 
@@ -25,7 +26,7 @@ class UI:
             drawable.initDrawer()
 
     def showDrawables(self) -> None:
-        allText = []
+        allText = [f"UI target FPS {Constants.FPS}"]
 
         for text in self.drawables:
             allText += text.getDrawer().getText().split("\n")

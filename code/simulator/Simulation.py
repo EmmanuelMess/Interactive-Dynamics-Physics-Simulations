@@ -1,6 +1,7 @@
 from timeit import default_timer as timer
 from typing import Callable, List
 
+import numba
 import numpy as np
 
 from simulator.SimulationFunctions import SimulationFunctions
@@ -43,13 +44,10 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
                 particle.aApplied = self.force(self.t)[particle.index].copy()
                 particle.a = particle.aApplied.copy()
 
-            f, g, J, C, dC = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
+            dq, Q, C, dC, W, J, dJ = SimulationFunctions.matrices(self.particles, self.constraints)
 
-            # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
-            l, _, _, _ = np.linalg.lstsq(g, -f, rcond=1e-8)
+            l, aConstraint = SimulationFunctions.precompiledMinimizeAndForceCalculation(self.ks, self.kd, dq, Q, C, dC, W, J, dJ )
             self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
-
-            aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
 
             return aConstraint[particle.index]
 
@@ -77,13 +75,10 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             particle.aApplied = self.force(self.t)[particle.index].copy()
             particle.a = particle.aApplied.copy()
 
-        f, g, J, C, dC = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
+        dq, Q, C, dC, W, J, dJ = SimulationFunctions.matrices(self.particles, self.constraints)
 
-        # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
-        l, _, _, _ = np.linalg.lstsq(g, -f, rcond=1e-8)
+        aConstraint, l, f, g = SimulationFunctions.precompiledMinimizeAndForceCalculation(self.ks, self.kd, dq, Q, C, dC, W, J, dJ)
         self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
-
-        aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
 
         for particle in self.particles:
             if particle.static:

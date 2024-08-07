@@ -11,25 +11,24 @@ from simulator.constraints.Constraint import Constraint
 class SimulationFunctions:
     @staticmethod
     @numba.jit(nopython=True, parallel=True, fastmath=True)
-    def precompiledForceCalculation(J: np.ndarray, l: np.ndarray) -> np.ndarray:
+    def precompiledMinimizeAndForceCalculation(ks: np.float64, kd: np.float64, dq: np.ndarray, Q: np.ndarray,
+                                               C: np.ndarray, dC: np.ndarray, W: np.ndarray, J: np.ndarray,
+                                               dJ: np.ndarray) \
+            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
         Resulting force for the particles (see mathematical model)
         """
-        return (J.T @ l).reshape((-1, 2))
-
-    @staticmethod
-    @numba.jit(nopython=True, parallel=True, fastmath=True)
-    def precompiledMatricesComputation(ks: np.float64, kd: np.float64, dq: np.ndarray, Q: np.ndarray, C: np.ndarray,
-                                       dC: np.ndarray, W: np.ndarray, J: np.ndarray, dJ: np.ndarray)\
-            -> Tuple[np.ndarray, np.ndarray]:
         f = dJ @ dq + J @ W @ Q + ks * C + kd * dC
         g = J @ W @ J.T @ (np.eye(J.shape[0]) * 3)
-        return f, g
+        # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
+        l, _, _, _ = np.linalg.lstsq(g, -f, rcond=1e-8)
+        force = (J.T @ l).reshape((-1, 2))
+        return force, l, f, g
 
     @staticmethod
-    def matrices(ks: np.float64, kd: np.float64, particles: List[Particle],
-                 constraints: List[Constraint], weight: np.float64 = np.float64(1))\
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:  # pylint: disable=too-many-locals
+    def matrices(particles: List[Particle], constraints: List[Constraint], weight: np.float64 = np.float64(1))\
+            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,
+            np.ndarray]:  # pylint: disable=too-many-locals
         """
         Compute the matrices to run the lagrangian multipliers (see mathematical model)
         """
@@ -68,9 +67,7 @@ class SimulationFunctions:
         J = J.reshape((m, n * d))
         dJ = dJ.reshape((m, n * d))
 
-        f, g = SimulationFunctions.precompiledMatricesComputation(ks, kd, dq, Q, C, dC, W, J, dJ)
-
-        return f, g, J, C, dC
+        return dq, Q, C, dC, W, J, dJ
 
     @staticmethod
     def x(p: np.ndarray, v: np.ndarray, a: np.ndarray, t: np.float64) -> np.ndarray:
