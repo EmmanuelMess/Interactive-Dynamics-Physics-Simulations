@@ -62,15 +62,13 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         :param timestep: Delta time at which the *next* step will be shown
         """
 
-        start = timer()
-
         if self.printData:
             print("----------")
             print("t", self.t)
-
-        if self.printData:
             for particle in self.particles:
                 print("i", particle.index, "x", particle.x, "v", particle.v)
+
+        start = timer()
 
         for particle in self.particles:
             if particle.static:
@@ -87,6 +85,19 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
         aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
 
+        for particle in self.particles:
+            if particle.static:
+                continue
+
+            particle.aConstraint = aConstraint[particle.index].copy()
+            particle.a = particle.aApplied + particle.aConstraint
+
+
+            particle.x = SimulationFunctions.x(particle.x, particle.v, particle.a, timestep)
+            particle.v = SimulationFunctions.dx(particle.x, particle.v, particle.a, timestep)
+
+        end = timer()
+
         if self.printData:
             print("ks", self.ks)
             print("kd", self.kd)
@@ -96,20 +107,9 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             print("λ", l)
             print("Λ(λ)", g * l.T + f)
 
-        for particle in self.particles:
-            if particle.static:
-                continue
-
-            particle.aConstraint = aConstraint[particle.index].copy()
-            particle.a = particle.aApplied + particle.aConstraint
-
-            if self.printData:
+            for particle in [particle for particle in self.particles if not particle.static]:
                 print("i", particle.index, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
 
-            particle.x = SimulationFunctions.x(particle.x, particle.v, particle.a, timestep)
-            particle.v = SimulationFunctions.dx(particle.x, particle.v, particle.a, timestep)
-
-        end = timer()
 
         self.updateTiming = end - start
         self.lastSecondIterations = [oldEnd for oldEnd in self.lastSecondIterations if end-oldEnd < 1]+[end]
