@@ -2,7 +2,6 @@ from timeit import default_timer as timer
 from typing import Callable, List
 
 import numpy as np
-import scipy
 
 from simulator.SimulationFunctions import SimulationFunctions
 from simulator.constraints.Constraint import Constraint
@@ -47,9 +46,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
             f, g, J, C, dC = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
 
             # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
-            r: scipy.optimize.OptimizeResult = scipy.optimize.least_squares(lambda l: g @ l + f, np.zeros_like(f),
-                                                                            jac=lambda _: g, method='trf')
-            l: np.ndarray = r.x
+            l, _, _, _ = np.linalg.lstsq(g, -f, rcond=1e-8)
             self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
 
             aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
@@ -85,9 +82,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         f, g, J, C, dC = SimulationFunctions.matrices(self.ks, self.kd, self.particles, self.constraints)
 
         # Solve for λ in g λ = -f, minimizing ||g λ + f||, where f = dJ dq + J W Q + ks C + kd dC and g = J W J.T
-        r: scipy.optimize.OptimizeResult = scipy.optimize.least_squares(lambda l: g @ l + f, np.zeros_like(f),
-                                                                        jac=lambda _: g, method='trf')
-        l: np.ndarray = r.x
+        l, _, _, _ = np.linalg.lstsq(g, -f, rcond=1e-8)
         self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
 
         aConstraint = SimulationFunctions.precompiledForceCalculation(J, l)
