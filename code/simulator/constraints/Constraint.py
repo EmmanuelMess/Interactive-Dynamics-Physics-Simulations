@@ -16,7 +16,7 @@ class Constraint(ABC, Drawable, IndexedElement):
     @abstractmethod
     def __init__(self, particles: List[Particle],
                  constraintAndDerivativeOfTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict],
-                                                         Tuple[jnp.float64, jnp.float64]],
+                 Tuple[jnp.float64, jnp.float64]],
                  dConstraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray],
                  d2Constraint: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict], jnp.ndarray]):
         """
@@ -24,6 +24,7 @@ class Constraint(ABC, Drawable, IndexedElement):
         :param particles: All particles that are affected by this constraint
         For the rest of the parameters pass the result from Constraint.computeDerivatives
         """
+        super().__init__()
         self.particles = particles
         self.constraintAndDerivativeOfTime = constraintAndDerivativeOfTime
         self.dConstraint = dConstraint

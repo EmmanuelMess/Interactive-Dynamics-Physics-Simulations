@@ -1,8 +1,9 @@
 from itertools import count
 
+from typing import List
+
 import pygame
 import numpy as np
-from typing import List
 
 from simulator import Constants
 from simulator.Constants import HEIGHT, WIDTH

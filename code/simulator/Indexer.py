@@ -6,8 +6,8 @@ from simulator.IndexedElement import IndexedElement
 T = TypeVar('T', bound=IndexedElement)
 
 
-def indexer(list: List[T]) -> List[T]:
-    for index, element in enumerate(list):
+def indexer(l: List[T]) -> List[T]:
+    for index, element in enumerate(l):
         element.setIndex(index)
 
-    return list
+    return l

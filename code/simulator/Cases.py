@@ -22,7 +22,7 @@ def case1() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         CircleConstraint(particles[0], np.array([50, 20], dtype=np.float64), np.float64(100))
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0]], dtype=np.float64)
 
     return particles, constraints, force
@@ -40,7 +40,7 @@ def case_dot_single_particle() -> Tuple[List[Particle], List[Constraint], Callab
         CircleConstraint(particles[0], np.array([50, 20], dtype=np.float64), np.float64(0.01))
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0]], dtype=np.float64)
 
     return particles, constraints, force
@@ -58,7 +58,7 @@ def case_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[np.floa
         CircleConstraint(particles[0], np.array([0, 0], dtype=np.float64), np.float64(100))
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         g = 9.8
         return np.array([[0, -g]], dtype=np.float64)
 
@@ -79,7 +79,7 @@ def case_double_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[
         DistanceConstraint(particles[0], particles[1], np.float64(50))
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         g = 9.8
         return np.array([[0, -g], [0, -g]], dtype=np.float64)
 
@@ -102,7 +102,7 @@ def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         DistanceConstraint(particles[2], particles[3], np.float64(100)),
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0], [0, 0], [0, 0], [0, 0]], dtype=np.float64)
 
     return particles, constraints, force
@@ -122,7 +122,7 @@ def case3() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         DistanceConstraint(particles[0], particles[1], np.float64(20)),
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0], [0, 0]], dtype=np.float64)
 
     return particles, constraints, force
@@ -156,7 +156,7 @@ def case4() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         DistanceConstraint(particles[5], particles[6], np.float64(25)),
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
     return particles, constraints, force
@@ -190,7 +190,7 @@ def case5() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         DistanceConstraint(particles[5], particles[6], np.float64(50)),
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
     return particles, constraints, force
@@ -225,7 +225,7 @@ def case_hanging_bridge() -> Tuple[List[Particle], List[Constraint], Callable[[n
         DistanceConstraint(particles[8], particles[9], np.float64(25)),
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         g = 9.8
         return np.array([[0, -g] for i in range(len(particles))], dtype=np.float64)
 
@@ -243,7 +243,7 @@ def case6() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         CircleConstraint(particles[0], np.array([100, 20], dtype=np.float64), np.float64(100))
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0]], dtype=np.float64)
 
     return particles, constraints, force
@@ -280,7 +280,7 @@ def case7() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         constraints.append(DistanceConstraint(particles[i+i//N+K], particles[i+M], CONSTRAINT_DISTANCE))
         constraints.append(DistanceConstraint(particles[i+i//N+K+1], particles[i+M], CONSTRAINT_DISTANCE))
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
     return Indexer.indexer(particles), Indexer.indexer(constraints), force
@@ -340,7 +340,7 @@ def case9() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
         CircleConstraint(particles[0], np.array([125, 20], dtype=np.float64), np.float64(100))
     ])
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0]], dtype=np.float64)
 
     return particles, constraints, force
@@ -377,7 +377,7 @@ def case10() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
         constraints.append(DistanceConstraint(particles[i+i//N+K], particles[i+M], CONSTRAINT_DISTANCE))
         constraints.append(DistanceConstraint(particles[i+i//N+K+1], particles[i+M], CONSTRAINT_DISTANCE))
 
-    def force(t: np.float64) -> np.ndarray:
+    def force(_: np.float64) -> np.ndarray:
         return np.array([[0, 0] for i in range(len(particles))], dtype=np.float64)
 
     return Indexer.indexer(particles), Indexer.indexer(constraints), force

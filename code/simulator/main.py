@@ -46,7 +46,7 @@ def main() -> None:
     DistanceConstraintFunctions()
     print("Done")
 
-    timestep = (np.float64(0.001))
+    timestep = np.float64(0.001)
     particles, constraints, force = Cases.CASES[args.case]()
     simulation = Simulation(particles, constraints, force, False)
     # simulation.generateGraph(AccelerationPortrait(np.array([0, 0], dtype=np.float64)))
