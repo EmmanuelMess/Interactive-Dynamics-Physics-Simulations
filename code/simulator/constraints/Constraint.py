@@ -35,7 +35,8 @@ class Constraint(ABC, Drawable, IndexedElement):
 
     @staticmethod
     @jax.jit
-    def getFullParticleMatrices(particlesX: List[np.ndarray], particlesV: List[np.ndarray], particlesA: List[np.ndarray]) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+    def getFullParticleMatrices(particlesX: List[np.ndarray], particlesV: List[np.ndarray],
+                                particlesA: List[np.ndarray]) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
         positionMatrix = jnp.array(particlesX, dtype=np.float64)
         velocityMatrix = jnp.array(particlesV, dtype=np.float64)
         accelerationMatrix = jnp.array(particlesA, dtype=np.float64)

@@ -86,7 +86,6 @@ def case_double_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[
     return particles, constraints, force
 
 
-
 def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Distance constraint single particle
@@ -329,6 +328,7 @@ def case8() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
     return Indexer.indexer(particles), Indexer.indexer(constraints), force
 
+
 def case9() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
     """
     Circle constrants single particle
@@ -383,7 +383,7 @@ def case10() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
     return Indexer.indexer(particles), Indexer.indexer(constraints), force
 
 
-def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:  # noqa: C901
     """
     Distance constraints in a grid for a lot of particles
     """

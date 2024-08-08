@@ -1,7 +1,6 @@
 from timeit import default_timer as timer
 from typing import Callable, List
 
-import numba
 import numpy as np
 
 from simulator.SimulationFunctions import SimulationFunctions
@@ -34,7 +33,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
         super(Simulation, self).setDrawer(SimulationDrawer(self))
 
-    def generateGraph(self, grapher: 'Graph'):
+    def generateGraph(self, grapher: 'Graph'):  # noqa: F821
         def acceleration(x, v) -> np.ndarray:
             particle = self.particles[0]
             particle.x = x
@@ -46,13 +45,13 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
             dq, Q, C, dC, W, J, dJ = SimulationFunctions.matrices(self.particles, self.constraints)
 
-            l, aConstraint = SimulationFunctions.precompiledMinimizeAndForceCalculation(self.ks, self.kd, dq, Q, C, dC, W, J, dJ )
+            aConstraint, l, f, g = SimulationFunctions.precompiledMinimizeAndForceCalculation(self.ks, self.kd, dq, Q,
+                                                                                              C, dC, W, J, dJ)
             self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
 
             return aConstraint[particle.index]
 
         grapher.draw(acceleration, self.constraints, self.particles)
-
 
     def update(self, timestep: np.float64) -> None:
         """
@@ -77,7 +76,8 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
         dq, Q, C, dC, W, J, dJ = SimulationFunctions.matrices(self.particles, self.constraints)
 
-        aConstraint, l, f, g = SimulationFunctions.precompiledMinimizeAndForceCalculation(self.ks, self.kd, dq, Q, C, dC, W, J, dJ)
+        aConstraint, l, f, g = SimulationFunctions.precompiledMinimizeAndForceCalculation(self.ks, self.kd, dq, Q, C,
+                                                                                          dC, W, J, dJ)
         self.error = f"constraint {np.linalg.norm(self.ks * C + self.kd * dC)} solve {np.linalg.norm(g * l + f)}"
 
         for particle in self.particles:
@@ -86,8 +86,6 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
             particle.aConstraint = aConstraint[particle.index].copy()
             particle.a = particle.aApplied + particle.aConstraint
-
-
             particle.x = SimulationFunctions.x(particle.x, particle.v, particle.a, timestep)
             particle.v = SimulationFunctions.dx(particle.x, particle.v, particle.a, timestep)
 
@@ -104,7 +102,6 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
             for particle in [particle for particle in self.particles if not particle.static]:
                 print("i", particle.index, "~a + ^a = a", particle.aApplied, particle.aConstraint, particle.a)
-
 
         self.updateTiming = end - start
         self.lastSecondIterations = [oldEnd for oldEnd in self.lastSecondIterations if end-oldEnd < 1]+[end]

@@ -3,7 +3,6 @@ import numpy as np
 
 from typing_extensions import Tuple, List
 
-from simulator import Indexer
 from simulator.Particle import Particle
 from simulator.constraints.Constraint import Constraint
 
@@ -27,8 +26,8 @@ class SimulationFunctions:
 
     @staticmethod
     def matrices(particles: List[Particle], constraints: List[Constraint], weight: np.float64 = np.float64(1))\
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,
-            np.ndarray]:  # pylint: disable=too-many-locals
+            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        # pylint: disable=too-many-locals
         """
         Compute the matrices to run the lagrangian multipliers (see mathematical model)
         """

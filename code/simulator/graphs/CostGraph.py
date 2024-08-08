@@ -30,7 +30,7 @@ class CostGraph(Graph):
 
         for i in range(NI):
             for j in range(NJ):
-                particle.x = np.array([x[i, j],  y[i, j]], dtype=np.float64)
+                particle.x = np.array([x[i, j], y[i, j]], dtype=np.float64)
                 particle.v = self.velocity
 
                 C, _, _, _ = constraint.get()
