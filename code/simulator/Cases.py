@@ -141,11 +141,11 @@ def case4() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
     """
     particles: List[Particle] = Indexer.indexer([
         Particle(np.array([0, 0], dtype=np.float64)),
-        Particle(np.array([25, -25], dtype=np.float64)),
+        Particle(np.array([25, 25], dtype=np.float64)),
         Particle(np.array([50, 0], dtype=np.float64)),
-        Particle(np.array([75, -25], dtype=np.float64)),
+        Particle(np.array([75, 25], dtype=np.float64)),
         Particle(np.array([100, 0], dtype=np.float64)),
-        Particle(np.array([125, -25], dtype=np.float64)),
+        Particle(np.array([125, 25], dtype=np.float64)),
         Particle(np.array([150, 0], dtype=np.float64)),
     ])
 
@@ -176,11 +176,11 @@ def case5() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
     """
     particles: List[Particle] = Indexer.indexer([
         Particle(np.array([0, 0], dtype=np.float64), static=True),
-        Particle(np.array([25, -25], dtype=np.float64)),
+        Particle(np.array([25, 25], dtype=np.float64)),
         Particle(np.array([50, 0], dtype=np.float64)),
-        Particle(np.array([75, -25], dtype=np.float64)),
+        Particle(np.array([75, 25], dtype=np.float64)),
         Particle(np.array([100, 0], dtype=np.float64)),
-        Particle(np.array([125, -25], dtype=np.float64)),
+        Particle(np.array([125, 25], dtype=np.float64)),
         Particle(np.array([150, 0], dtype=np.float64), static=True),
     ])
 
