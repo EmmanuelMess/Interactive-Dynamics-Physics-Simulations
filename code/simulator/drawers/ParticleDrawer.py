@@ -21,9 +21,12 @@ class ParticleDrawer(Drawer):
         p = origin + self.particle.x * np.array([1, -1], dtype=np.float64)
         aApplied = p + self.particle.aApplied * c * np.array([1, -1], dtype=np.float64)
         aConstraint = p + self.particle.aConstraint * c * np.array([1, -1], dtype=np.float64)
-        pygame.draw.line(surface, (0, 255, 0), p, aApplied)
-        pygame.draw.line(surface, (255, 0, 0), p, aConstraint)
-        pygame.draw.circle(surface, (255, 0, 0) if self.particle.static else (0, 0, 255), p, self.radius)
+        pygame.draw.line(surface, (0, 255, 0), (p[0].item(), p[1].item()),
+                         (aApplied[0].item(), aApplied[1].item()))
+        pygame.draw.line(surface, (255, 0, 0), (p[0].item(), p[1].item()),
+                         (aConstraint[0].item(), aConstraint[1].item()))
+        pygame.draw.circle(surface, (255, 0, 0) if self.particle.static else (0, 0, 255), (p[0].item(), p[1].item()),
+                           self.radius)
         surface.blit(self.label, p + np.array([self.radius*0.5, self.radius*0.5]))
 
     def getText(self) -> str:

@@ -25,7 +25,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
         self.ks = np.float64(1000)
         self.kd = np.sqrt(4 * self.ks)
         self.t = np.float64(0)
-        self.lastSecondIterations = []
+        self.lastSecondIterations: List[float] = []
         self.error = "0"
 
     def initDrawer(self) -> None:
@@ -33,8 +33,8 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
         super(Simulation, self).setDrawer(SimulationDrawer(self))
 
-    def generateGraph(self, grapher: 'Graph'):  # noqa: F821
-        def acceleration(x, v) -> np.ndarray:
+    def generateGraph(self, grapher: 'Graph') -> None:  # type: ignore[name-defined]  # noqa: F821
+        def acceleration(x: np.ndarray, v: np.ndarray) -> np.ndarray:
             particle = self.particles[0]
             particle.x = x
             particle.v = v
