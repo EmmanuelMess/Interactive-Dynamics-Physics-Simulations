@@ -53,7 +53,7 @@ class Simulation(Drawable):  # pylint: disable=too-many-instance-attributes
 
         grapher.draw(acceleration, self.constraints, self.particles)
 
-    def update(self, timestep: np.float64) -> None:
+    def update(self, timestep: np.float64) -> None:  # pylint: disable=too-many-locals
         """
         Run internal simulation update.
         :param timestep: Delta time at which the *next* step will be shown

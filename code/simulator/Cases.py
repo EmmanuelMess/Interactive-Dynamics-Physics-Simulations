@@ -11,6 +11,7 @@ from simulator.constraints.DistanceConstraint import DistanceConstraint
 
 
 def case1() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Circle constrant single particle
     """
@@ -29,6 +30,7 @@ def case1() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case_dot_single_particle() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Circle constrant single particle
     """
@@ -47,6 +49,7 @@ def case_dot_single_particle() -> Tuple[List[Particle], List[Constraint], Callab
 
 
 def case_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Pendulum under gravity
     """
@@ -66,6 +69,7 @@ def case_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[np.floa
 
 
 def case_double_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Double pendulum under gravity
     """
@@ -87,6 +91,7 @@ def case_double_pendulum() -> Tuple[List[Particle], List[Constraint], Callable[[
 
 
 def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraint single particle
     """
@@ -109,6 +114,7 @@ def case2() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case3() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Circle and distance constraints multi particles
     """
@@ -129,6 +135,7 @@ def case3() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case4() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraints multi particles
     """
@@ -163,6 +170,7 @@ def case4() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case5() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraints multi particles
     """
@@ -197,6 +205,7 @@ def case5() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case_hanging_bridge() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraints multi particles
     """
@@ -233,6 +242,7 @@ def case_hanging_bridge() -> Tuple[List[Particle], List[Constraint], Callable[[n
 
 
 def case6() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Circle constrant single particle
     """
@@ -250,6 +260,7 @@ def case6() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case7() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraints in a grid for a lot of particles
     """
@@ -287,6 +298,7 @@ def case7() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case8() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraints in a grid for a lot of particles
     """
@@ -330,6 +342,7 @@ def case8() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case9() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Circle constrants single particle
     """
@@ -347,6 +360,7 @@ def case9() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np
 
 
 def case10() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:
+    # pylint: disable=too-many-locals
     """
     Distance constraints in a grid for a lot of particles
     """
@@ -384,6 +398,7 @@ def case10() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], n
 
 
 def torque() -> Tuple[List[Particle], List[Constraint], Callable[[np.float64], np.ndarray]]:  # noqa: C901
+    # pylint: disable=too-many-locals
     """
     Distance constraints in a grid for a lot of particles
     """

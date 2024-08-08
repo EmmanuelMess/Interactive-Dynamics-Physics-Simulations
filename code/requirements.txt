@@ -6,3 +6,4 @@ numpy
 jax
 numba
 pygame
+matplotlib
