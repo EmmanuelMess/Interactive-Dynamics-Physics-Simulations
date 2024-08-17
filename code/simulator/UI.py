@@ -11,8 +11,8 @@ from simulator.drawers.Drawable import Drawable
 
 
 class UI:
-    def __init__(self, drawables: List[Drawable], timestep: np.float64) -> None:
-        self.drawables, self.timestep = drawables, timestep
+    def __init__(self, drawables: List[Drawable]) -> None:
+        self.drawables = drawables
         self.size = [HEIGHT, WIDTH]
         self.origin = np.array(self.size)/2
         self.running = True

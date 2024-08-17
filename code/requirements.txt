@@ -7,3 +7,4 @@ jax
 numba
 pygame
 matplotlib
+pandas
