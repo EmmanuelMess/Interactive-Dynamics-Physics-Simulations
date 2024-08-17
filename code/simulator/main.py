@@ -27,7 +27,7 @@ def runWithUi(simulation: Simulation, ui: UI, fileSaver: Union[FileSaver, None],
 
     lastFrame = timer()
     while running:
-        userHasntQuit = ui is None or len([event for event in pygame.event.get() if event.type == pygame.QUIT]) == 0
+        userHasntQuit = len([event for event in pygame.event.get() if event.type == pygame.QUIT]) == 0
         running = userHasntQuit
 
         while timer() - lastFrame < 1.0/Constants.FPS:
@@ -48,7 +48,6 @@ def runNoUi(simulation: Simulation, fileSaver: FileSaver, timestep: np.float64, 
 
         if fileSaver is not None:
             fileSaver.update()
-
 
 
 def main() -> None:
@@ -82,7 +81,9 @@ def main() -> None:
     if args.save is None:
         saver = None
     else:
-        writables = typing.cast(List[Writable], particles)
+        writables = []
+        writables += typing.cast(List[Writable], particles)
+        writables += typing.cast(List[Writable], constraints)
         saver = FileSaver(f"output/{args.save}", writables)
 
     if args.no_ui:
@@ -101,6 +102,8 @@ def main() -> None:
         # HACK First update will compile everything and is not representative for profiling
         simulation.update(timestep)
         scalene_profiler.start()
+
+    print("Running!")
 
     if args.no_ui:
         runNoUi(simulation, saver, timestep, args.iterations)

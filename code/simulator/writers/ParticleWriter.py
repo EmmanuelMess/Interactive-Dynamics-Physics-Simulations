@@ -11,7 +11,7 @@ class ParticleWriter(Writer):
 
     def write(self, datapoints: List[Dict[str, Union[int, np.float64]]]) -> None:
         data = {
-            'index': self.particle.index,
+            'particle_index': self.particle.index,
             'position_x': self.particle.x[0],
             'position_y': self.particle.x[1],
             'velocity_x': self.particle.v[0],

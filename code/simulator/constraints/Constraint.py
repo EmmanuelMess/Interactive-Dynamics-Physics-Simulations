@@ -10,9 +10,10 @@ from simulator import PositionApproximation
 from simulator.IndexedElement import IndexedElement
 from simulator.Particle import Particle
 from simulator.drawers.Drawable import Drawable
+from simulator.writers.Writable import Writable
 
 
-class Constraint(ABC, Drawable, IndexedElement):
+class Constraint(ABC, Drawable, Writable, IndexedElement):
     @abstractmethod
     def __init__(self, particles: List[Particle],
                  constraintAndDerivativeOfTime: Callable[[jnp.float64, jnp.ndarray, jnp.ndarray, jnp.ndarray, dict],
@@ -29,6 +30,10 @@ class Constraint(ABC, Drawable, IndexedElement):
         self.constraintAndDerivativeOfTime = constraintAndDerivativeOfTime
         self.dConstraint = dConstraint
         self.d2Constraint = d2Constraint
+        self.C: jnp.float64 = jnp.float64(0)
+        self.dC: jnp.float64 = jnp.float64(0)
+        self.J: jnp.ndarray = jnp.array(0)
+        self.dJ: jnp.ndarray = jnp.array(0)
 
     @abstractmethod
     def getArgs(self) -> dict:
@@ -49,7 +54,14 @@ class Constraint(ABC, Drawable, IndexedElement):
                                                      [particle.v for particle in self.particles],
                                                      [particle.a for particle in self.particles])
         args = self.getArgs()
-        C, dC = self.constraintAndDerivativeOfTime(PositionApproximation.ZERO_TIME, x, v, a, args)
-        J = self.dConstraint(PositionApproximation.ZERO_TIME, x, v, a, args)
-        dJ = self.d2Constraint(PositionApproximation.ZERO_TIME, x, v, a, args)
-        return C, dC, J, dJ
+
+        # Cache the data
+        self.C, self.dC = self.constraintAndDerivativeOfTime(PositionApproximation.ZERO_TIME, x, v, a, args)
+        self.J = self.dConstraint(PositionApproximation.ZERO_TIME, x, v, a, args)
+        self.dJ = self.d2Constraint(PositionApproximation.ZERO_TIME, x, v, a, args)
+
+        return self.C, self.dC, self.J, self.dJ
+
+    def initWriter(self) -> None:
+        from simulator.writers.ConstraintWriter import ConstraintWriter  # Prevent circular dependency
+        self.setWriter(ConstraintWriter(self))
