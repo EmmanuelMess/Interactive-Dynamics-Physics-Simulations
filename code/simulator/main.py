@@ -22,28 +22,33 @@ if importlib.util.find_spec("scalene") is not None:
     from scalene import scalene_profiler  # type: ignore
 
 
-def run(simulation: Simulation, ui: Union[UI, None], fileSaver: Union[FileSaver, None], timestep: np.float64,
-        steps: Union[int, None] = None) -> None:
+def runWithUi(simulation: Simulation, ui: UI, fileSaver: Union[FileSaver, None], timestep: np.float64) -> None:
     running = True
-    iteration = 0
 
     lastFrame = timer()
     while running:
         userHasntQuit = ui is None or len([event for event in pygame.event.get() if event.type == pygame.QUIT]) == 0
-        iterationsLeft = steps is None or iteration < steps
-        running = userHasntQuit and iterationsLeft
+        running = userHasntQuit
 
         while timer() - lastFrame < 1.0/Constants.FPS:
             simulation.update(timestep)
 
-            iteration += 1
-            print(f"\r{iteration}/{steps}...", end="")
-
-        if ui is not None:
-            ui.update()
+        ui.update()
         if fileSaver is not None:
             fileSaver.update()
+
         lastFrame = timer()
+
+
+def runNoUi(simulation: Simulation, fileSaver: FileSaver, timestep: np.float64, steps: int) -> None:
+    for i in range(0, steps):
+        simulation.update(timestep)
+
+        print(f"\r{i+1}/{steps}...", end="")
+
+        if fileSaver is not None:
+            fileSaver.update()
+
 
 
 def main() -> None:
@@ -51,12 +56,16 @@ def main() -> None:
     parser.add_argument('-c', '--case', required=True)
     parser.add_argument('-p', '--profile', action='store_true')
     parser.add_argument('--no_ui', action='store_true', default=False)
-    parser.add_argument('--save', action='store_true')
+    parser.add_argument('--save', type=str, default=None)
     parser.add_argument('--steps', type=int, default=None)
     args = parser.parse_args()
 
     if args.no_ui and not args.save:
         print("Error: Not save to file and no UI", file=sys.stderr)
+        return
+
+    if not args.no_ui and args.steps is not None:
+        print("Error: Steps doesn't work with UI", file=sys.stderr)
         return
 
     print("Loading derivatives...", end="")
@@ -74,7 +83,7 @@ def main() -> None:
         saver = None
     else:
         writables = typing.cast(List[Writable], particles)
-        saver = FileSaver("output/a", writables)
+        saver = FileSaver(f"output/{args.save}", writables)
 
     if args.no_ui:
         ui = None
@@ -93,7 +102,10 @@ def main() -> None:
         simulation.update(timestep)
         scalene_profiler.start()
 
-    run(simulation, ui, saver, timestep, args.steps)
+    if args.no_ui:
+        runNoUi(simulation, saver, timestep, args.steps)
+    else:
+        runWithUi(simulation, ui, saver, timestep)
 
     if not args.no_ui:
         pygame.quit()
